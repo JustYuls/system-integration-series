@@ -1,0 +1,222 @@
+{
+  "info": {
+    "name": "Campus Event Planner: gateway (episode 13)",
+    "description": "Start everything with npm start. Import in Postman or Thunder Client. These requests go to the gateway on port 4000.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "gateway",
+      "value": "http://localhost:4000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Gateway (4000)",
+      "item": [
+        {
+          "name": "Create a request and plan it",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"has the four checks\", function () { pm.expect(Object.keys(pm.response.json().checks)).to.eql([\"holiday\",\"venue\",\"weather\",\"budget\"]); });",
+                  "pm.test(\"Location points to the assessment\", function () { pm.expect(pm.response.headers.get(\"Location\")).to.match(/assessment$/); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gateway}}/api/requests",
+              "host": [
+                "{{gateway}}"
+              ],
+              "path": [
+                "api",
+                "requests"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quiz Night\",\n  \"organization\": \"Math Club\",\n  \"date\": \"2027-05-20\",\n  \"venue\": \"Lab A\",\n  \"attendees\": 35,\n  \"budget\": {\n    \"amount\": 1200,\n    \"currency\": \"PHP\"\n  },\n  \"outdoor\": false,\n  \"contactEmail\": \"math@campus.example\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create a request with missing fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{gateway}}/api/requests",
+              "host": [
+                "{{gateway}}"
+              ],
+              "path": [
+                "api",
+                "requests"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quiz Night\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get the last assessment of EVT-0001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway}}/api/requests/EVT-0001/assessment",
+              "host": [
+                "{{gateway}}"
+              ],
+              "path": [
+                "api",
+                "requests",
+                "EVT-0001",
+                "assessment"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Plan EVT-0001 again",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{gateway}}/api/requests/EVT-0001/assessment",
+              "host": [
+                "{{gateway}}"
+              ],
+              "path": [
+                "api",
+                "requests",
+                "EVT-0001",
+                "assessment"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List requests",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway}}/api/requests",
+              "host": [
+                "{{gateway}}"
+              ],
+              "path": [
+                "api",
+                "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Gateway health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway}}/health",
+              "host": [
+                "{{gateway}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

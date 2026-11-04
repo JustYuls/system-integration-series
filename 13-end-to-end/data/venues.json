@@ -1,0 +1,7 @@
+[
+  { "id": "gym", "name": "Gym", "capacity": 400, "outdoor": false, "penaltyPhp": 0 },
+  { "id": "room-101", "name": "Room 101", "capacity": 60, "outdoor": false, "penaltyPhp": 50 },
+  { "id": "lab-a", "name": "Lab A", "capacity": 40, "outdoor": false, "penaltyPhp": 0 },
+  { "id": "atrium", "name": "Atrium", "capacity": 500, "outdoor": false, "penaltyPhp": 0 },
+  { "id": "field", "name": "Field", "capacity": 1000, "outdoor": true, "penaltyPhp": 120 }
+]
