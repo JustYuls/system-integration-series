@@ -1,0 +1,14 @@
+{
+  "name": "campus-event-planner",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Campus Event Planner, episode 2: the event request process in BPMN",
+  "scripts": {
+    "check": "node bpmn-check.js",
+    "simulate": "node simulate-demo.js",
+    "diagram": "node add-diagram.js",
+    "review:bpmn": "node review/bpmn-review.js",
+    "test": "node --test"
+  }
+}
