@@ -1,0 +1,18 @@
+{
+  "name": "campus-event-planner",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "description": "Campus Event Planner, episode 4: functional requirements",
+  "scripts": {
+    "check": "node bpmn-check.js",
+    "simulate": "node simulate-demo.js",
+    "diagram": "node add-diagram.js",
+    "review:bpmn": "node review/bpmn-review.js",
+    "test": "node --test",
+    "document": "node document-process.js",
+    "review:docs": "node review/docs-review.js",
+    "requirements": "node check-requirements.js",
+    "review:fr": "node review/fr-review.js"
+  }
+}
