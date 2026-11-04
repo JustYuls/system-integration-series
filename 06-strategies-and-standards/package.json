@@ -1,0 +1,25 @@
+{
+  "name": "campus-event-planner",
+  "version": "0.6.0",
+  "private": true,
+  "type": "module",
+  "description": "Campus Event Planner, episode 6: integration strategies and standards",
+  "scripts": {
+    "check": "node bpmn-check.js",
+    "simulate": "node simulate-demo.js",
+    "diagram": "node add-diagram.js",
+    "review:bpmn": "node review/bpmn-review.js",
+    "test": "node --test",
+    "document": "node document-process.js",
+    "review:docs": "node review/docs-review.js",
+    "requirements": "node check-requirements.js",
+    "review:fr": "node review/fr-review.js",
+    "nfr": "node check-nfr.js",
+    "measure": "node measure-apis.js",
+    "review:nfr": "node review/nfr-review.js",
+    "strategy": "node choose-strategy.js",
+    "openapi": "node check-openapi.js",
+    "standards": "node check-standards.js",
+    "review:strategy": "node review/strategy-review.js"
+  }
+}
