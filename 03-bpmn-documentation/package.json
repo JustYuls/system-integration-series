@@ -1,0 +1,16 @@
+{
+  "name": "campus-event-planner",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Campus Event Planner, episode 3: documenting the process and gathering requirements",
+  "scripts": {
+    "check": "node bpmn-check.js",
+    "simulate": "node simulate-demo.js",
+    "diagram": "node add-diagram.js",
+    "review:bpmn": "node review/bpmn-review.js",
+    "test": "node --test",
+    "document": "node document-process.js",
+    "review:docs": "node review/docs-review.js"
+  }
+}
