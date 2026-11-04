@@ -1,0 +1,27 @@
+{
+  "note": "Links from every requirement to what builds it and what proves it. An endpoint is 'VERB /path' of docs/openapi.json, or it is marked internal. A service is an id of docs/services.json (or 'gateway' for the planner logic inside the gateway).",
+  "functional": {
+    "FR-01": { "service": "student-affairs-service", "endpoint": "POST /api/requests", "testTag": "FR-01" },
+    "FR-02": { "service": "holiday-service", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-02" },
+    "FR-03": { "service": "facilities-service", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-03" },
+    "FR-04": { "service": "facilities-service", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-04" },
+    "FR-05": { "service": "weather-service", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-05" },
+    "FR-06": { "service": "finance-service", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-06" },
+    "FR-07": { "service": "currency-service", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-07" },
+    "FR-08": { "service": "gateway", "endpoint": "POST /api/requests", "testTag": "FR-08" },
+    "FR-09": { "service": "student-affairs-service", "endpoint": "GET /api/requests/{requestNo}", "testTag": "FR-09" },
+    "FR-10": { "service": "student-affairs-service", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-10" },
+    "FR-11": { "service": "notification-service", "endpoint": "sendNotice", "internal": true, "testTag": "FR-11" },
+    "FR-12": { "service": "gateway", "endpoint": "GET /api/requests/{requestNo}/assessment", "testTag": "FR-12" }
+  },
+  "nonFunctional": {
+    "NFR-01": { "verification": "measurement", "evidence": "measure-apis.js times the three outside APIs: the slowest p95 (1260 ms) plus 500 ms of our own work is 1760 ms.", "testTag": "NFR-01" },
+    "NFR-02": { "verification": "test", "evidence": "An integration test makes each outside API fail in turn and expects the decision needs-review.", "testTag": "NFR-02" },
+    "NFR-03": { "verification": "test", "evidence": "A unit test with a fake fetch that always fails counts the attempts: at most 3.", "testTag": "NFR-03" },
+    "NFR-04": { "verification": "test", "evidence": "A test scans the source files for key patterns; each endpoint test sends one bad input and expects 400.", "testTag": "NFR-04" },
+    "NFR-05": { "verification": "review", "evidence": "A test rejects codes such as BR-03 in the reasons, and the Student Affairs officer reads the reasons of the seven seed requests.", "testTag": "NFR-05" },
+    "NFR-06": { "verification": "test", "evidence": "A contract test checks the content type, the date format and the currency code of each response.", "testTag": "NFR-06" },
+    "NFR-07": { "verification": "inspection", "evidence": "verify.js lists the endpoints of the OpenAPI file and looks for a tagged test of each.", "testTag": "NFR-07" },
+    "NFR-08": { "verification": "measurement", "evidence": "A load test sends 20 requests in one minute to a planner with fake outside services.", "testTag": "NFR-08" }
+  }
+}
