@@ -1,0 +1,21 @@
+{
+  "name": "campus-event-planner",
+  "version": "0.5.0",
+  "private": true,
+  "type": "module",
+  "description": "Campus Event Planner, episode 5: non-functional requirements and case analysis",
+  "scripts": {
+    "check": "node bpmn-check.js",
+    "simulate": "node simulate-demo.js",
+    "diagram": "node add-diagram.js",
+    "review:bpmn": "node review/bpmn-review.js",
+    "test": "node --test",
+    "document": "node document-process.js",
+    "review:docs": "node review/docs-review.js",
+    "requirements": "node check-requirements.js",
+    "review:fr": "node review/fr-review.js",
+    "nfr": "node check-nfr.js",
+    "measure": "node measure-apis.js",
+    "review:nfr": "node review/nfr-review.js"
+  }
+}
