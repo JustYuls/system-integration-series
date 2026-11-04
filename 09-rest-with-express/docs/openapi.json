@@ -1,0 +1,182 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Campus Event Planner API",
+    "version": "1.0.0",
+    "description": "The public API of the gateway: submit an event request and read the planning decision."
+  },
+  "servers": [{ "url": "http://localhost:4000", "description": "the gateway on a developer machine" }],
+  "x-internal-requirements": [
+    { "id": "FR-11", "reason": "The notice to the organizer is sent through the message queue, not through an HTTP operation." }
+  ],
+  "paths": {
+    "/api/requests": {
+      "post": {
+        "summary": "Submit an event request and plan it",
+        "operationId": "submitRequest",
+        "x-requirements": ["FR-01", "FR-08"],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NewRequest" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "The request was created and planned.",
+            "headers": { "Location": { "description": "The URL of the new request", "schema": { "type": "string" } } },
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Assessment" } } }
+          },
+          "400": {
+            "description": "A required field is missing or invalid; the message lists the fields.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/requests/{requestNo}": {
+      "get": {
+        "summary": "Read one event request",
+        "operationId": "getRequest",
+        "x-requirements": ["FR-09"],
+        "parameters": [{ "$ref": "#/components/parameters/requestNo" }],
+        "responses": {
+          "200": {
+            "description": "The request with its current status.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Request" } } }
+          },
+          "404": {
+            "description": "No request has this number.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/api/requests/{requestNo}/assessment": {
+      "get": {
+        "summary": "Read the planning decision of a request",
+        "operationId": "getAssessment",
+        "x-requirements": ["FR-02", "FR-03", "FR-04", "FR-05", "FR-06", "FR-07", "FR-08", "FR-10", "FR-12"],
+        "parameters": [{ "$ref": "#/components/parameters/requestNo" }],
+        "responses": {
+          "200": {
+            "description": "The decision, the four checks, and the reasons.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Assessment" } } }
+          },
+          "404": {
+            "description": "No request has this number.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Check that the gateway and the services are running",
+        "operationId": "getHealth",
+        "x-requirements": [],
+        "x-nfr": ["NFR-02"],
+        "responses": {
+          "200": {
+            "description": "The gateway is running.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Health" } } }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "requestNo": {
+        "name": "requestNo", "in": "path", "required": true,
+        "description": "The request number, for example EVT-0001.",
+        "schema": { "type": "string", "pattern": "^EVT-\\d{4}$", "example": "EVT-0001" }
+      }
+    },
+    "schemas": {
+      "Money": {
+        "type": "object",
+        "required": ["amount", "currency"],
+        "properties": {
+          "amount": { "type": "number", "example": 500 },
+          "currency": { "type": "string", "description": "ISO 4217 code", "pattern": "^[A-Z]{3}$", "example": "USD" }
+        }
+      },
+      "NewRequest": {
+        "type": "object",
+        "required": ["title", "date", "venue", "attendees", "budget"],
+        "properties": {
+          "title": { "type": "string", "example": "Orientation Day" },
+          "organization": { "type": "string", "example": "Computer Society" },
+          "date": { "type": "string", "format": "date", "description": "ISO 8601", "example": "2027-03-04" },
+          "venue": { "type": "string", "example": "Gym" },
+          "attendees": { "type": "integer", "minimum": 1, "example": 120 },
+          "budget": { "$ref": "#/components/schemas/Money" },
+          "outdoor": { "type": "boolean", "default": false },
+          "contactEmail": { "type": "string", "example": "organizer@campus.example" }
+        }
+      },
+      "Request": {
+        "type": "object",
+        "required": ["requestNo", "title", "date", "status", "venue", "attendees", "budget"],
+        "properties": {
+          "requestNo": { "type": "string", "example": "EVT-0001" },
+          "title": { "type": "string" },
+          "organization": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "status": { "type": "string", "enum": ["Pending", "On hold", "Approved", "Returned"] },
+          "venue": { "type": "string" },
+          "attendees": { "type": "integer" },
+          "budget": { "$ref": "#/components/schemas/Money" },
+          "outdoor": { "type": "boolean" },
+          "contactEmail": { "type": "string" }
+        }
+      },
+      "Check": {
+        "type": "object",
+        "required": ["ok", "available"],
+        "properties": {
+          "ok": { "type": "boolean" },
+          "available": { "type": "boolean", "description": "false when the outside service did not answer" },
+          "reason": { "type": "string", "description": "a full sentence, no codes" }
+        }
+      },
+      "Assessment": {
+        "type": "object",
+        "required": ["requestNo", "decision", "checks", "reasons"],
+        "properties": {
+          "requestNo": { "type": "string", "example": "EVT-0001" },
+          "decision": { "type": "string", "enum": ["approved", "returned", "needs-review"] },
+          "checks": {
+            "type": "object",
+            "required": ["holiday", "venue", "weather", "budget"],
+            "properties": {
+              "holiday": { "$ref": "#/components/schemas/Check" },
+              "venue": { "$ref": "#/components/schemas/Check" },
+              "weather": { "$ref": "#/components/schemas/Check" },
+              "budget": { "$ref": "#/components/schemas/Check" }
+            }
+          },
+          "reasons": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": ["status"],
+        "properties": { "status": { "type": "string", "example": "ok" } }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "string", "example": "NOT_FOUND" },
+              "message": { "type": "string", "example": "No request EVT-0099" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

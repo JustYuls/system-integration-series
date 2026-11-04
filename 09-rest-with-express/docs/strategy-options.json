@@ -1,0 +1,78 @@
+{
+  "scenario": {
+    "systems": 6,
+    "description": "Three internal systems (Student Affairs, Finance, Facilities) and three outside APIs (Open-Meteo, Nager.Date, Frankfurter) must work together to plan one event request."
+  },
+  "scale": "1 = poor, 5 = very good. For cost, 5 = cheap and quick to build, 1 = expensive and slow.",
+  "constraints": { "cost": { "points": 3, "why": "a small student team with one semester" } },
+  "priorities": {
+    "NFR-01": "Must", "NFR-02": "Must", "NFR-03": "Must", "NFR-04": "Must",
+    "NFR-05": "Should", "NFR-06": "Must", "NFR-07": "Should", "NFR-08": "Could"
+  },
+  "options": [
+    {
+      "id": "point-to-point", "name": "Point-to-point",
+      "idea": "Each system calls each other system directly.",
+      "ratings": { "performance": 4, "availability": 2, "reliability": 2, "security": 2, "usability": 3, "interoperability": 2, "maintainability": 1, "capacity": 3, "cost": 4 },
+      "why": {
+        "performance": "one direct call, no extra hop",
+        "maintainability": "6 systems need up to 15 links, and each one is code to maintain",
+        "interoperability": "every link may use its own format",
+        "cost": "cheap while there are few links"
+      }
+    },
+    {
+      "id": "hub-and-spoke", "name": "Hub-and-spoke (API gateway)",
+      "idea": "Every call goes through one gateway that knows all the systems.",
+      "ratings": { "performance": 4, "availability": 3, "reliability": 4, "security": 5, "usability": 4, "interoperability": 5, "maintainability": 4, "capacity": 3, "cost": 4 },
+      "why": {
+        "security": "one place for validation and logging",
+        "reliability": "timeouts and retries are written once",
+        "availability": "the hub is a single point of failure",
+        "cost": "one small Express app"
+      }
+    },
+    {
+      "id": "esb", "name": "Enterprise service bus (ESB)",
+      "idea": "A central bus routes, transforms and orchestrates messages between many systems.",
+      "ratings": { "performance": 3, "availability": 3, "reliability": 4, "security": 4, "usability": 3, "interoperability": 5, "maintainability": 3, "capacity": 5, "cost": 1 },
+      "why": {
+        "capacity": "built for many systems and heavy traffic",
+        "cost": "a product to buy or learn, and a lot of configuration",
+        "performance": "every message passes the bus and its transformations"
+      }
+    },
+    {
+      "id": "batch-etl", "name": "Batch file transfer (ETL)",
+      "idea": "Files are extracted, transformed and loaded on a schedule, for example every night.",
+      "ratings": { "performance": 1, "availability": 4, "reliability": 3, "security": 3, "usability": 1, "interoperability": 3, "maintainability": 3, "capacity": 4, "cost": 3 },
+      "why": {
+        "performance": "an answer arrives with the next run, not within 3 seconds",
+        "usability": "the organizer waits for the next run",
+        "capacity": "large volumes in one run are what batch does well"
+      }
+    },
+    {
+      "id": "event-driven", "name": "Event-driven (message queue)",
+      "idea": "Systems publish events to a queue; others consume them when they are ready.",
+      "ratings": { "performance": 3, "availability": 5, "reliability": 5, "security": 3, "usability": 2, "interoperability": 3, "maintainability": 3, "capacity": 5, "cost": 3 },
+      "why": {
+        "availability": "a consumer that is down just reads later",
+        "reliability": "messages wait in the queue and are retried",
+        "usability": "the organizer gets no direct answer, only a later message"
+      }
+    },
+    {
+      "id": "gateway-plus-queue", "name": "Gateway + queue for notifications",
+      "combination": ["hub-and-spoke", "event-driven"],
+      "idea": "A gateway answers the organizer at once; the notice about the decision goes through a message queue.",
+      "ratings": { "performance": 4, "availability": 5, "reliability": 5, "security": 5, "usability": 4, "interoperability": 5, "maintainability": 3, "capacity": 4, "cost": 3 },
+      "why": {
+        "availability": "the answer does not wait for the mail system; the queue holds the notice",
+        "reliability": "failed notices are retried from the queue",
+        "maintainability": "two parts to maintain instead of one",
+        "cost": "a gateway plus a small in-memory queue"
+      }
+    }
+  ]
+}
