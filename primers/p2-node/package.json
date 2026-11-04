@@ -1,0 +1,13 @@
+{
+  "name": "p2-node-primer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Primer 2: Node.js for the Campus Event Planner (venues from a CSV file)",
+  "scripts": {
+    "start": "node demo.js",
+    "venues": "node venues-cli.js --capacity 100",
+    "review": "node review/node-review.js",
+    "test": "node --test"
+  }
+}

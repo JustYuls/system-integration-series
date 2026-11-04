@@ -1,0 +1,6 @@
+id,name,capacity,outdoor,penaltyPhp
+gym,Gym,400,false,0
+room-101,Room 101,60,false,50
+lab-a,Lab A,40,false,0
+atrium,Atrium,500,false,0
+field,Field,1000,true,120
