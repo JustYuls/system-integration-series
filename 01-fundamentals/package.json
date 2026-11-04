@@ -1,0 +1,12 @@
+{
+  "name": "ep01-fundamentals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Episode 1: three silos of the Campus Event Planner, combined by adapters",
+  "scripts": {
+    "start": "node run-demo.js",
+    "review": "node review/review.js",
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# video production files stay out of the code repo
+videos/
+kits/
+node_modules/
+_stages/
+/package.json
+/package-lock.json
+tools/

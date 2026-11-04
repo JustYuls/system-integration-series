@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reservations>
+  <reservation request="EVT-0001"><title>Orientation Day</title><date>2027-03-04</date><venue>Gym</venue><hours>3</hours><penalty>0</penalty></reservation>
+  <reservation request="EVT-0002"><title>General Assembly</title><date>2027-11-22</date><venue>Room 101</venue><hours>4</hours><penalty>50</penalty></reservation>
+  <reservation request="EVT-0003"><title>Coding Contest</title><date>2028-01-09</date><venue>Lab A</venue><hours>2</hours><penalty>0</penalty></reservation>
+  <reservation request="EVT-0003"><title>Coding Contest</title><date>2028-01-09</date><venue>Lab A</venue><hours>2</hours><penalty>0</penalty></reservation>
+  <reservation request="EVT-0004"><title>Job Fair</title><date>2027-07-30</date><venue>Atrium</venue><hours>6</hours><penalty>0</penalty></reservation>
+  <reservation request="EVT-0005"><title>Fun Run</title><date>2028-02-14</date><venue>Field</venue><hours>5</hours><penalty>120</penalty></reservation>
+  <reservation request="EVT-0007"><title>General Assembly</title><date>2027-06-15</date><venue>Room 101</venue><hours>2</hours><penalty>0</penalty></reservation>
+</reservations>

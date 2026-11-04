@@ -1,0 +1,11 @@
+{
+  "system": "finance",
+  "deposits": [
+    {"ref": "EVT0001", "title": "ORIENTATION DAY", "balance": 0.0},
+    {"ref": "EVT0002", "title": "GENERAL ASSEMBLY", "balance": 1500.50},
+    {"ref": "EVT0003", "title": "CODING CONTEST", "balance": 0.0},
+    {"ref": "EVT0004", "title": "JOB FAIR", "balance": 320.0},
+    {"ref": "EVT0007", "title": "GENERAL ASSEMBLY", "balance": 0.0},
+    {"ref": "EVT0009", "title": "BOOK FAIR", "balance": 800.0}
+  ]
+}
