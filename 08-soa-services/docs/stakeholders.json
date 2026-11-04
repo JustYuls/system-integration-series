@@ -1,0 +1,54 @@
+{
+  "stakeholders": [
+    {
+      "id": "SH1", "name": "Student organization officer", "lane": "Organizer",
+      "concern": "A fast answer, and clear reasons when the answer is no.",
+      "technique": "interview",
+      "questions": [
+        "How do you ask for a venue today, and what makes it slow?",
+        "What information do you usually forget to include in a request?",
+        "What would you like to see in the answer when your request is returned?"
+      ]
+    },
+    {
+      "id": "SH2", "name": "Student Affairs officer", "lane": "Student Affairs Officer",
+      "concern": "Fair, consistent decisions with a record of why.",
+      "technique": "interview and observation",
+      "questions": [
+        "Which checks do you do by hand before you approve an event?",
+        "When do you override a rule, and how do you record the reason?",
+        "Which requests take you the longest to decide, and why?"
+      ]
+    },
+    {
+      "id": "SH3", "name": "Facilities staff", "lane": "Planner System",
+      "concern": "No double bookings and no damaged rooms left unpaid.",
+      "technique": "document analysis",
+      "questions": [
+        "How do you record a reservation, and who else can see it?",
+        "What happens when two organizations ask for the same room?",
+        "How do you handle a venue with an unpaid penalty?"
+      ]
+    },
+    {
+      "id": "SH4", "name": "Finance clerk", "lane": "Planner System",
+      "concern": "Deposits are paid before the event, and sponsor money is recorded in pesos.",
+      "technique": "questionnaire",
+      "questions": [
+        "How do you know that a deposit is paid?",
+        "How are sponsor amounts in other currencies recorded today?",
+        "Which part of the payment record is wrong most often?"
+      ]
+    },
+    {
+      "id": "SH5", "name": "IT administrator", "lane": "Planner System",
+      "concern": "Few moving parts, clear logs, and no secrets in the code.",
+      "technique": "workshop",
+      "questions": [
+        "Which systems can we call, and in which format do they answer?",
+        "What happens to the campus network when an outside service is down?",
+        "How should we record who asked for what, and when?"
+      ]
+    }
+  ]
+}
