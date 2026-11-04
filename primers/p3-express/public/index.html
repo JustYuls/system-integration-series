@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campus Event Planner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Campus Event Planner</h1>
+    <p>Pick a venue and send your event request.</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="venues-title">
+      <h2 id="venues-title">Venues</h2>
+      <label for="min-capacity">Minimum capacity</label>
+      <input id="min-capacity" type="number" min="0" step="10" value="0">
+      <table>
+        <thead>
+          <tr><th>Venue</th><th>Capacity</th><th>Outdoor</th><th>Penalty (PHP)</th></tr>
+        </thead>
+        <tbody id="venue-rows"></tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="form-title">
+      <h2 id="form-title">Event request</h2>
+      <form id="request-form">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" required>
+
+        <label for="date">Date</label>
+        <input id="date" name="date" type="date" required>
+
+        <label for="venue">Venue</label>
+        <select id="venue" name="venue" required></select>
+
+        <label for="attendees">Attendees</label>
+        <input id="attendees" name="attendees" type="number" min="1" required>
+
+        <button type="submit">Send request</button>
+      </form>
+      <p id="status" role="status"></p>
+    </section>
+  </main>
+
+  <footer>Campus Event Planner, Primer 3</footer>
+  <script src="app.js" type="module"></script>
+</body>
+</html>

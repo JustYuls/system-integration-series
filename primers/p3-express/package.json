@@ -1,0 +1,14 @@
+{
+  "name": "p3-express",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Primer 3: Express, HTML and CSS for the Campus Event Planner",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "node demo.js",
+    "review": "node review/express-review.js",
+    "test": "node --test"
+  },
+  "dependencies": { "express": "^5.1.0" }
+}

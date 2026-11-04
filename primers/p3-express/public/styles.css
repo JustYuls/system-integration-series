@@ -1,0 +1,86 @@
+/* Variables: change a color once, it changes everywhere. */
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --text: #1b2333;
+  --muted: #5b6478;
+  --accent: #1d6fe0;
+  --good: #1a7f4b;
+  --bad: #c0392b;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+header {
+  padding: 1.5rem 2rem;
+  background: var(--accent);
+  color: white;
+}
+header h1 { margin: 0; }
+header p { margin: 0.25rem 0 0; }
+
+/* Two columns side by side (grid). On a small screen they stack (see the media query). */
+main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+
+section {
+  background: var(--card);
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+}
+
+table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #e3e7ef; }
+th { color: var(--muted); }
+tbody tr:hover { background: #eef4ff; }
+
+/* Flexbox: a form is a column of fields. */
+form { display: flex; flex-direction: column; gap: 0.5rem; }
+
+input, select, button {
+  font: inherit;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #b8c0d0;
+  border-radius: 8px;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+/* A visible focus state helps people who use the keyboard. */
+:focus-visible {
+  outline: 3px solid #f5a623;
+  outline-offset: 2px;
+}
+
+#status.ok { color: var(--good); }
+#status.error { color: var(--bad); }
+
+footer { text-align: center; color: var(--muted); padding: 1rem; }
+
+/* Responsive: on a narrow screen, one column. */
+@media (max-width: 700px) {
+  main { grid-template-columns: 1fr; }
+  th:nth-child(4), td:nth-child(4) { display: none; }
+}
