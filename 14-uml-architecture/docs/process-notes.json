@@ -1,0 +1,74 @@
+{
+  "purpose": "Decide quickly and fairly whether a student organization may hold an event, using the rules of the campus and facts from the campus systems and free public APIs.",
+  "rules": {
+    "BR-01": "An event cannot be approved on a public holiday.",
+    "BR-02": "An outdoor event needs a rain chance below 60 percent on its date.",
+    "BR-03": "The venue must be free at the requested time and hold at least as many people as the attendees.",
+    "BR-04": "A venue with an unpaid facility penalty cannot be reserved.",
+    "BR-05": "The deposit must be paid before approval.",
+    "BR-06": "Every request names a title, a date, a venue, the number of attendees and a budget.",
+    "BR-07": "Money in another currency is converted to Philippine pesos at the latest rate.",
+    "BR-08": "A request is approved only when every check passed."
+  },
+  "tasks": {
+    "T01": {
+      "actor": "Organizer", "system": "Planner web page", "externalApi": null,
+      "inputs": ["title", "date", "venue", "attendees", "budget", "outdoor or indoor"],
+      "outputs": ["event request"],
+      "rules": ["BR-06"],
+      "exceptions": ["The form is incomplete: show the missing fields and keep what was typed."]
+    },
+    "T02": {
+      "actor": "Planner System", "system": "Holiday service", "externalApi": "Nager.Date",
+      "inputs": ["event date"],
+      "outputs": ["holiday check: ok, or the name of the holiday"],
+      "rules": ["BR-01"],
+      "exceptions": ["The service does not answer: mark the check unknown and ask the officer to decide."]
+    },
+    "T03": {
+      "actor": "Planner System", "system": "Facilities system", "externalApi": null,
+      "inputs": ["venue", "date", "attendees"],
+      "outputs": ["venue check: free or not, capacity, unpaid penalty"],
+      "rules": ["BR-03", "BR-04"],
+      "exceptions": ["The venue does not exist: return a clear error to the organizer."]
+    },
+    "T04": {
+      "actor": "Planner System", "system": "Weather service", "externalApi": "Open-Meteo",
+      "inputs": ["event date", "venue location", "outdoor or indoor"],
+      "outputs": ["weather check: rain chance in percent, or not needed for indoor events"],
+      "rules": ["BR-02"],
+      "exceptions": ["The date is too far ahead for a forecast: mark the check unknown."]
+    },
+    "T05": {
+      "actor": "Planner System", "system": "Finance system", "externalApi": "Frankfurter",
+      "inputs": ["request number", "budget and currency"],
+      "outputs": ["budget check: deposit paid or not, budget in pesos"],
+      "rules": ["BR-05", "BR-07"],
+      "exceptions": ["The exchange rate is not available: use the last known rate and say so."]
+    },
+    "T06": {
+      "actor": "Student Affairs Officer", "system": "Student Affairs system", "externalApi": null,
+      "inputs": ["request", "results of the four checks"],
+      "outputs": ["approved request"],
+      "rules": ["BR-08"],
+      "exceptions": ["The officer disagrees with the checks: the request is returned with a written reason."]
+    },
+    "T07": {
+      "actor": "Planner System", "system": "Notification service", "externalApi": null,
+      "inputs": ["decision", "reasons", "organizer e-mail"],
+      "outputs": ["notice sent to the organizer"],
+      "rules": [],
+      "exceptions": ["The e-mail cannot be sent: try again later, then record the failure."]
+    },
+    "T08": {
+      "actor": "Student Affairs Officer", "system": "Student Affairs system", "externalApi": null,
+      "inputs": ["request", "list of failed checks"],
+      "outputs": ["revision notice with the reasons"],
+      "rules": ["BR-08"],
+      "exceptions": []
+    }
+  },
+  "decisions": {
+    "G3": { "question": "All checks passed?", "yes": "every check result is ok", "no": "at least one check failed or is unknown" }
+  }
+}

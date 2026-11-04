@@ -1,0 +1,203 @@
+{
+  "name": "Campus Event Planner service catalog",
+  "version": "1.0.0",
+  "note": "Derived from the BPMN service and send tasks and from docs/process-notes.json (the system field of each task).",
+  "services": [
+    {
+      "id": "holiday-service",
+      "name": "Holiday service",
+      "description": "Tells whether a date is a public holiday in a country.",
+      "version": "1.0.0",
+      "owner": "Student Affairs IT",
+      "system": "Holiday service",
+      "tasks": ["T02"],
+      "dataOwner": "Nager.Date (outside)",
+      "protocol": "REST/JSON",
+      "externalApi": "Nager.Date",
+      "sla": "answers in 2 seconds or less; the answer for a date may be cached for 24 hours",
+      "operations": [
+        {
+          "name": "isPublicHoliday",
+          "summary": "Is this date a public holiday?",
+          "input": ["date", "countryCode"],
+          "output": ["date", "isHoliday", "name", "available"],
+          "errors": ["BAD_INPUT", "UPSTREAM"]
+        }
+      ]
+    },
+    {
+      "id": "facilities-service",
+      "name": "Facilities service",
+      "description": "Venues, their capacity and penalties, and their reservations.",
+      "version": "1.0.0",
+      "owner": "Facilities Office",
+      "system": "Facilities system",
+      "tasks": ["T03"],
+      "dataOwner": "Facilities Office",
+      "protocol": "REST/JSON",
+      "externalApi": null,
+      "sla": "answers in 300 milliseconds or less; available during office hours at least",
+      "operations": [
+        {
+          "name": "listVenues",
+          "summary": "List the venues, optionally with a minimum capacity.",
+          "input": ["minCapacity"],
+          "output": ["id", "name", "capacity", "outdoor", "penaltyPhp"],
+          "errors": ["BAD_INPUT"]
+        },
+        {
+          "name": "getVenueAvailability",
+          "summary": "Can this venue hold this many people on this date?",
+          "input": ["venueId", "date", "attendees"],
+          "output": ["venue", "date", "available", "capacityOk", "penaltyPhp", "reasons"],
+          "errors": ["BAD_INPUT", "NOT_FOUND"]
+        },
+        {
+          "name": "reserveVenue",
+          "summary": "Reserve a venue for a date.",
+          "input": ["requestNo", "venueId", "date", "hours"],
+          "output": ["requestNo", "venueId", "date", "hours"],
+          "errors": ["BAD_INPUT", "NOT_FOUND", "CONFLICT"]
+        }
+      ]
+    },
+    {
+      "id": "weather-service",
+      "name": "Weather service",
+      "description": "The forecast for a date at a place: rain chance and highest temperature.",
+      "version": "1.0.0",
+      "owner": "Student Affairs IT",
+      "system": "Weather service",
+      "tasks": ["T04"],
+      "dataOwner": "Open-Meteo (outside)",
+      "protocol": "REST/JSON",
+      "externalApi": "Open-Meteo",
+      "sla": "answers in 2 seconds or less; a forecast exists for the next 16 days only",
+      "operations": [
+        {
+          "name": "getForecast",
+          "summary": "The forecast for one date, in a normalized form.",
+          "input": ["date", "latitude", "longitude"],
+          "output": ["available", "date", "rainChancePercent", "maxTempC", "source", "reason"],
+          "errors": ["BAD_INPUT", "UPSTREAM"]
+        }
+      ]
+    },
+    {
+      "id": "finance-service",
+      "name": "Finance service",
+      "description": "Deposits: how much of a deposit is still unpaid, and payments.",
+      "version": "1.0.0",
+      "owner": "Finance Office",
+      "system": "Finance system",
+      "tasks": ["T05"],
+      "dataOwner": "Finance Office",
+      "protocol": "REST/JSON",
+      "externalApi": null,
+      "sla": "answers in 300 milliseconds or less; available during office hours at least",
+      "operations": [
+        {
+          "name": "getDeposit",
+          "summary": "The unpaid balance of the deposit of a request.",
+          "input": ["requestNo"],
+          "output": ["requestNo", "balancePhp", "paid"],
+          "errors": ["NOT_FOUND"]
+        },
+        {
+          "name": "recordPayment",
+          "summary": "Record a payment against a deposit.",
+          "input": ["requestNo", "amountPhp"],
+          "output": ["requestNo", "balancePhp", "paid"],
+          "errors": ["BAD_INPUT", "NOT_FOUND"]
+        }
+      ]
+    },
+    {
+      "id": "currency-service",
+      "name": "Currency conversion service",
+      "description": "Converts an amount in another currency to Philippine pesos.",
+      "version": "1.0.0",
+      "owner": "Finance Office",
+      "system": "Frankfurter",
+      "tasks": ["T05"],
+      "dataOwner": "Frankfurter (outside)",
+      "protocol": "REST/JSON",
+      "externalApi": "Frankfurter",
+      "sla": "answers in 2 seconds or less; the rate may be one day old",
+      "operations": [
+        {
+          "name": "convert",
+          "summary": "Convert an amount to pesos at the latest rate.",
+          "input": ["amount", "currency"],
+          "output": ["amountPhp", "rate", "asOf", "available"],
+          "errors": ["BAD_INPUT", "UPSTREAM"]
+        }
+      ]
+    },
+    {
+      "id": "notification-service",
+      "name": "Notification service",
+      "description": "Sends a notice about a decision to the organizer.",
+      "version": "1.0.0",
+      "owner": "Student Affairs IT",
+      "system": "Notification service",
+      "tasks": ["T07"],
+      "dataOwner": "Student Affairs IT",
+      "protocol": "REST/JSON",
+      "externalApi": null,
+      "sla": "accepts a notice in 500 milliseconds or less; delivery is tried again later when the mail server is down",
+      "operations": [
+        {
+          "name": "sendNotice",
+          "summary": "Send the decision and its reasons to an e-mail address.",
+          "input": ["requestNo", "decision", "reasons", "contactEmail"],
+          "output": ["accepted", "sentAt"],
+          "errors": ["BAD_INPUT", "UNAVAILABLE"]
+        }
+      ]
+    },
+    {
+      "id": "student-affairs-service",
+      "name": "Student Affairs service",
+      "description": "Event requests: create, read, list and change the status of a request.",
+      "version": "1.0.0",
+      "owner": "Student Affairs Office",
+      "system": "Student Affairs system",
+      "tasks": ["T06", "T08"],
+      "dataOwner": "Student Affairs Office",
+      "protocol": "REST/JSON",
+      "externalApi": null,
+      "sla": "answers in 300 milliseconds or less; available during office hours at least",
+      "operations": [
+        {
+          "name": "listRequests",
+          "summary": "List the requests, optionally of one status.",
+          "input": ["status"],
+          "output": ["requestNo", "title", "organization", "date", "status"],
+          "errors": ["BAD_INPUT"]
+        },
+        {
+          "name": "getRequest",
+          "summary": "One request with all its details.",
+          "input": ["requestNo"],
+          "output": ["requestNo", "title", "organization", "date", "status", "venue", "attendees", "budget", "outdoor", "contactEmail"],
+          "errors": ["NOT_FOUND"]
+        },
+        {
+          "name": "submitRequest",
+          "summary": "Create a new request with the status Pending.",
+          "input": ["title", "organization", "date", "venue", "attendees", "budget", "outdoor", "contactEmail"],
+          "output": ["requestNo", "status"],
+          "errors": ["BAD_INPUT"]
+        },
+        {
+          "name": "updateRequestStatus",
+          "summary": "Change the status of a request.",
+          "input": ["requestNo", "status"],
+          "output": ["requestNo", "status"],
+          "errors": ["BAD_INPUT", "NOT_FOUND"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "functional": [
+    {
+      "id": "FR-01", "task": "T01", "actor": "Organizer", "priority": "Must", "rules": ["BR-06"],
+      "statement": "The system shall list the missing fields when an organizer submits a request without a title, date, venue, attendees or budget.",
+      "acceptance": [
+        "Given a request without a venue, when the organizer submits it, then the system lists venue as missing and creates no request.",
+        "Given a complete request, when the organizer submits it, then the system accepts it and gives it a request number."
+      ]
+    },
+    {
+      "id": "FR-02", "task": "T02", "actor": "Planner System", "priority": "Must", "rules": ["BR-01"],
+      "statement": "The system shall mark the date check as failed when the event date is a public holiday in the Philippines.",
+      "acceptance": [
+        "Given the date 2027-12-25 is Christmas Day, when the date check runs, then the check fails and names the holiday.",
+        "Given the date 2027-03-04 is not a holiday, when the date check runs, then the check passes."
+      ]
+    },
+    {
+      "id": "FR-03", "task": "T03", "actor": "Planner System", "priority": "Must", "rules": ["BR-03"],
+      "statement": "The system shall mark the venue check as failed when the venue is reserved on the date or holds fewer people than the attendees.",
+      "acceptance": [
+        "Given Room 101 holds 60 people, when a request has 80 attendees, then the venue check fails with the reason capacity.",
+        "Given the Gym is free on 2027-03-04, when a request has 120 attendees, then the venue check passes."
+      ]
+    },
+    {
+      "id": "FR-04", "task": "T03", "actor": "Planner System", "priority": "Must", "rules": ["BR-04"],
+      "statement": "The system shall mark the venue check as failed when the venue has an unpaid facility penalty.",
+      "acceptance": [
+        "Given Room 101 has an unpaid penalty of 50 pesos, when a request asks for Room 101, then the venue check fails with the reason penalty.",
+        "Given the Gym has no penalty, when a request asks for the Gym, then the penalty does not fail the check."
+      ]
+    },
+    {
+      "id": "FR-05", "task": "T04", "actor": "Planner System", "priority": "Must", "rules": ["BR-02"],
+      "statement": "The system shall mark the weather check as failed when an outdoor event has a rain chance of 60 percent or more on its date.",
+      "acceptance": [
+        "Given an outdoor event and a rain chance of 70 percent, when the weather check runs, then the check fails.",
+        "Given an indoor event, when the weather check runs, then the check is skipped and passes."
+      ]
+    },
+    {
+      "id": "FR-06", "task": "T05", "actor": "Planner System", "priority": "Must", "rules": ["BR-05"],
+      "statement": "The system shall mark the budget check as failed when the deposit of the request is not fully paid.",
+      "acceptance": [
+        "Given request EVT-0004 has a balance of 320 pesos, when the budget check runs, then the check fails.",
+        "Given request EVT-0001 has a balance of 0, when the budget check runs, then the deposit does not fail the check."
+      ]
+    },
+    {
+      "id": "FR-07", "task": "T05", "actor": "Planner System", "priority": "Should", "rules": ["BR-07"],
+      "statement": "The system shall convert a budget in another currency to Philippine pesos at the latest exchange rate.",
+      "acceptance": [
+        "Given a budget of 500 USD and a rate of 63.46, when the budget check runs, then the budget is 31730 pesos.",
+        "Given a budget of 15000 PHP, when the budget check runs, then the budget stays 15000 pesos."
+      ]
+    },
+    {
+      "id": "FR-08", "task": "G3", "actor": "Planner System", "priority": "Must", "rules": ["BR-08"],
+      "statement": "The system shall approve a request only when the holiday, venue, weather and budget checks all passed.",
+      "acceptance": [
+        "Given all four checks passed, when the decision is made, then the decision is approved.",
+        "Given the venue check failed and three checks passed, when the decision is made, then the decision is returned."
+      ]
+    },
+    {
+      "id": "FR-09", "task": "T06", "actor": "Student Affairs Officer", "priority": "Must", "rules": ["BR-08"],
+      "statement": "The system shall set the status of a request to Approved when the officer approves it.",
+      "acceptance": [
+        "Given a pending request whose checks all passed, when the officer approves it, then its status is Approved.",
+        "Given a request that is already Approved, when the officer opens it, then the approve action is not offered."
+      ]
+    },
+    {
+      "id": "FR-10", "task": "T08", "actor": "Student Affairs Officer", "priority": "Must", "rules": ["BR-08"],
+      "statement": "The system shall return a request to the organizer with the reason of every failed check.",
+      "acceptance": [
+        "Given a request that failed the date check and the venue check, when the officer returns it, then the status is Returned and both reasons are listed.",
+        "Given a request with no failed check, when the officer returns it, then the system asks for a written reason."
+      ]
+    },
+    {
+      "id": "FR-11", "task": "T07", "actor": "Planner System", "priority": "Must", "rules": [],
+      "statement": "The system shall send the organizer a notice with the decision and its reasons.",
+      "acceptance": [
+        "Given a returned request with the reason holiday, when the decision is made, then the organizer receives a notice that names the holiday.",
+        "Given the e-mail cannot be sent, when the notice is sent, then the system tries again later and records the failure."
+      ]
+    },
+    {
+      "id": "FR-12", "task": "G3", "actor": "Planner System", "priority": "Should", "rules": [],
+      "statement": "The system shall mark a request as needs-review when an outside service does not answer and no other check failed.",
+      "acceptance": [
+        "Given the holiday service is down and the other checks passed, when the decision is made, then the decision is needs-review with the reason holiday service.",
+        "Given the weather service is down and the venue check failed, when the decision is made, then the decision is returned."
+      ]
+    }
+  ]
+}
