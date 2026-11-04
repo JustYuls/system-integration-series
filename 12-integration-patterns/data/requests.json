@@ -1,0 +1,9 @@
+[
+  { "requestNo": "EVT-0001", "title": "Orientation Day", "organization": "Computer Society", "date": "2027-03-04", "status": "Pending", "venue": "Gym", "attendees": 120, "budget": { "amount": 15000, "currency": "PHP" }, "outdoor": false, "contactEmail": "csoc@campus.example" },
+  { "requestNo": "EVT-0002", "title": "General Assembly", "organization": "Nursing Guild", "date": "2027-11-22", "status": "Pending", "venue": "Room 101", "attendees": 60, "budget": { "amount": 2000, "currency": "PHP" }, "outdoor": false, "contactEmail": "nursing@campus.example" },
+  { "requestNo": "EVT-0003", "title": "Coding Contest", "organization": "Computer Society", "date": "2028-01-09", "status": "Pending", "venue": "Lab A", "attendees": 40, "budget": { "amount": 5000, "currency": "PHP" }, "outdoor": false, "contactEmail": "csoc@campus.example" },
+  { "requestNo": "EVT-0004", "title": "Job Fair", "organization": "Career Office", "date": "2027-07-30", "status": "Pending", "venue": "Atrium", "attendees": 300, "budget": { "amount": 500, "currency": "USD" }, "outdoor": false, "contactEmail": "career@campus.example" },
+  { "requestNo": "EVT-0005", "title": "Fun Run", "organization": "Sports Club", "date": "2028-02-14", "status": "On hold", "venue": "Field", "attendees": 200, "budget": { "amount": 8000, "currency": "PHP" }, "outdoor": true, "contactEmail": "sports@campus.example" },
+  { "requestNo": "EVT-0007", "title": "General Assembly", "organization": "Art Circle", "date": "2027-06-15", "status": "Pending", "venue": "Room 101", "attendees": 50, "budget": { "amount": 1000, "currency": "PHP" }, "outdoor": false, "contactEmail": "art@campus.example" },
+  { "requestNo": "EVT-0008", "title": "Christmas Cleanup", "organization": "Eco Club", "date": "2027-12-25", "status": "Pending", "venue": "Field", "attendees": 80, "budget": { "amount": 3000, "currency": "PHP" }, "outdoor": true, "contactEmail": "eco@campus.example" }
+]

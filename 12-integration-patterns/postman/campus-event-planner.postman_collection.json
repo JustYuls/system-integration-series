@@ -1,0 +1,825 @@
+{
+  "info": {
+    "name": "Campus Event Planner: internal services",
+    "description": "Requests for the three services of episode 9. Start them with npm run start:services. Import this file in Postman or in Thunder Client (Collections, then the menu, then Import). Every request has a test for the expected status.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Student Affairs (4001)",
+      "item": [
+        {
+          "name": "List requests",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List requests on hold",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests?status=On hold",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "On hold"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get request EVT-0001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests/EVT-0001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests",
+                "EVT-0001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get unknown request (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests/EVT-9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests",
+                "EVT-9999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create request (201 + Location)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quiz Night\",\n  \"organization\": \"Math Club\",\n  \"date\": \"2027-05-20\",\n  \"venue\": \"Lab A\",\n  \"attendees\": 35,\n  \"budget\": {\n    \"amount\": 1200,\n    \"currency\": \"PHP\"\n  },\n  \"contactEmail\": \"math@campus.example\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create request with missing fields (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quiz Night\",\n  \"date\": \"2027-05-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve request EVT-0001 (PATCH status)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Approved\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests/EVT-0001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests",
+                "EVT-0001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Withdraw request EVT-0002 (204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 204\", function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4001/requests/EVT-0002",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "requests",
+                "EVT-0002"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4001/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4001",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Finance (4002)",
+      "item": [
+        {
+          "name": "Get deposit EVT-0004",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4002/deposits/EVT-0004",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4002",
+              "path": [
+                "deposits",
+                "EVT-0004"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get deposit without a record (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4002/deposits/EVT-0005",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4002",
+              "path": [
+                "deposits",
+                "EVT-0005"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pay 120 PHP (201 + Location)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amountPhp\": 120\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4002/deposits/EVT-0004/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4002",
+              "path": [
+                "deposits",
+                "EVT-0004",
+                "payments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pay more than the balance (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 422\", function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amountPhp\": 5000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4002/deposits/EVT-0004/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4002",
+              "path": [
+                "deposits",
+                "EVT-0004",
+                "payments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pay a paid deposit (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 409\", function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amountPhp\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4002/deposits/EVT-0001/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4002",
+              "path": [
+                "deposits",
+                "EVT-0001",
+                "payments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4002/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4002",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Facilities (4003)",
+      "item": [
+        {
+          "name": "List venues",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4003/venues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "venues"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Venues for 300 people",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4003/venues?minCapacity=300",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "venues"
+              ],
+              "query": [
+                {
+                  "key": "minCapacity",
+                  "value": "300"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get venue room-101",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4003/venues/room-101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "venues",
+                "room-101"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Availability of room-101",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4003/venues/room-101/availability?date=2027-11-22&attendees=80",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "venues",
+                "room-101",
+                "availability"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2027-11-22"
+                },
+                {
+                  "key": "attendees",
+                  "value": "80"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reserve the gym (201 + Location)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestNo\": \"EVT-0001\",\n  \"venueId\": \"gym\",\n  \"date\": \"2027-03-04\",\n  \"hours\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4003/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "reservations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reserve the gym on a reserved date (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 409\", function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestNo\": \"EVT-0003\",\n  \"venueId\": \"gym\",\n  \"date\": \"2027-03-05\",\n  \"hours\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:4003/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "reservations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get reservation EVT-0006",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4003/reservations/EVT-0006",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "reservations",
+                "EVT-0006"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:4003/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "4003",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

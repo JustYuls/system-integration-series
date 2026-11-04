@@ -1,0 +1,30 @@
+{
+  "measuredAt": "2026-11-04",
+  "from": "one laptop, one network, one afternoon",
+  "apis": {
+    "Open-Meteo": {
+      "runs": 10,
+      "failures": 0,
+      "minMs": 250,
+      "avgMs": 358,
+      "p95Ms": 1260,
+      "maxMs": 1260
+    },
+    "Nager.Date": {
+      "runs": 10,
+      "failures": 0,
+      "minMs": 87,
+      "avgMs": 166,
+      "p95Ms": 762,
+      "maxMs": 762
+    },
+    "Frankfurter": {
+      "runs": 10,
+      "failures": 0,
+      "minMs": 93,
+      "avgMs": 181,
+      "p95Ms": 915,
+      "maxMs": 915
+    }
+  }
+}

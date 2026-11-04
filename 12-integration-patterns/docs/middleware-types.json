@@ -1,0 +1,46 @@
+{
+  "title": "Integration technologies (middleware)",
+  "intro": "Middleware is software that sits between applications and moves data and calls between them, so the applications do not need to know each other.",
+  "types": [
+    {
+      "id": "mom",
+      "name": "Message-oriented middleware (MOM)",
+      "purpose": "Carries messages between applications through queues or topics, so sender and receiver do not need to be online at the same time.",
+      "style": "asynchronous",
+      "example": "RabbitMQ, Apache Kafka, Azure Service Bus",
+      "usedInPlanner": "The queue that carries request.decided to the notifier (task T07)."
+    },
+    {
+      "id": "esb",
+      "name": "Enterprise service bus (ESB)",
+      "purpose": "A central bus that routes messages, translates formats and applies rules between many services.",
+      "style": "both",
+      "example": "MuleSoft Anypoint, WSO2 Enterprise Integrator",
+      "usedInPlanner": "Not used: too heavy for three services, but the idea of one shared channel is the same."
+    },
+    {
+      "id": "gateway",
+      "name": "API gateway",
+      "purpose": "One entry point for clients that forwards each call to the right service and adds security, limits and logging.",
+      "style": "synchronous",
+      "example": "Kong, NGINX, AWS API Gateway",
+      "usedInPlanner": "The gateway on port 4000 in front of the three services (episode 11)."
+    },
+    {
+      "id": "etl",
+      "name": "ETL (extract, transform, load)",
+      "purpose": "Copies data in batches from one system, reshapes it, and loads it into another, often a report or data warehouse.",
+      "style": "batch",
+      "example": "Apache NiFi, Talend, a nightly script",
+      "usedInPlanner": "Not used: the planner reads live data; ETL would fit a nightly report for Finance."
+    },
+    {
+      "id": "eai-hub",
+      "name": "EAI hub",
+      "purpose": "Enterprise application integration: one hub connects the applications, each through one adapter, instead of every pair talking directly.",
+      "style": "both",
+      "example": "A hub-and-spoke integration server",
+      "usedInPlanner": "The planner itself acts as a small hub for Student Affairs, Finance and Facilities."
+    }
+  ]
+}
