@@ -1,0 +1,12 @@
+{
+  "name": "campus-event-planner-primer-1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Primer 1: JavaScript basics for the Campus Event Planner",
+  "scripts": {
+    "start": "node demo.js",
+    "review": "node review/js-review.js",
+    "test": "node --test"
+  }
+}
