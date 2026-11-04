@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campus Event Planner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#request-form">Skip to the form</a>
+  <header>
+    <h1>Campus Event Planner</h1>
+    <p>Ask to hold an event. The planner checks the date, the venue, the weather and the budget, then tells you the decision.</p>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="form-title">
+      <h2 id="form-title">New event request</h2>
+      <form id="request-form" novalidate>
+        <div class="field">
+          <label for="title">Title</label>
+          <input id="title" name="title" type="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="organization">Organization</label>
+          <input id="organization" name="organization" type="text" autocomplete="organization">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date">
+          </div>
+          <div class="field">
+            <label for="venue">Venue</label>
+            <input id="venue" name="venue" type="text" list="venues" autocomplete="off">
+            <datalist id="venues">
+              <option value="Gym"></option>
+              <option value="Room 101"></option>
+              <option value="Lab A"></option>
+              <option value="Atrium"></option>
+              <option value="Field"></option>
+            </datalist>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="attendees">Attendees</label>
+            <input id="attendees" name="attendees" type="number" min="1" step="1" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="amount">Budget</label>
+            <input id="amount" name="amount" type="number" min="1" step="any" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="currency">Currency</label>
+            <select id="currency" name="currency">
+              <option>PHP</option>
+              <option>USD</option>
+              <option>EUR</option>
+              <option>JPY</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="contactEmail">Contact e-mail</label>
+          <input id="contactEmail" name="contactEmail" type="email" autocomplete="email">
+        </div>
+        <div class="field check-field">
+          <input id="outdoor" name="outdoor" type="checkbox">
+          <label for="outdoor">This is an outdoor event</label>
+        </div>
+        <p id="form-problems" class="problems" role="alert" hidden></p>
+        <button type="submit" id="submit">Send the request</button>
+      </form>
+    </section>
+
+    <section class="panel" id="decision" aria-labelledby="decision-title" aria-live="polite" hidden>
+      <h2 id="decision-title">Decision</h2>
+      <p id="decision-badge" class="decision"></p>
+      <p id="decision-request" class="muted"></p>
+      <h3>The four checks</h3>
+      <ul id="checks" class="checks"></ul>
+      <h3>Reasons</h3>
+      <ul id="reasons" class="reasons"></ul>
+    </section>
+
+    <section class="panel wide" aria-labelledby="list-title">
+      <h2 id="list-title">Requests</h2>
+      <p id="list-status" class="muted" role="status">Loading...</p>
+      <ul id="requests" class="requests"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

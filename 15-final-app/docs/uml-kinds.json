@@ -1,0 +1,68 @@
+{
+  "note": "The UML diagram kinds this course uses. view: structure = what the parts are, behavior = what happens over time. showsOrder: does the diagram show the order of events? generated: the key of the diagram that src/diagrams.js writes for it (null = not generated).",
+  "kinds": [
+    {
+      "id": "use-case",
+      "name": "Use case diagram",
+      "view": "behavior",
+      "question": "Who uses the system, and for which goals?",
+      "showsOrder": false,
+      "generated": null,
+      "useInProject": "Organizer: submit a request. Officer: decide a request. Written first, before the services are chosen."
+    },
+    {
+      "id": "class",
+      "name": "Class diagram",
+      "view": "structure",
+      "question": "Which things (data) exist, and how are they related?",
+      "showsOrder": false,
+      "generated": null,
+      "useInProject": "Request, Venue and Deposit with their fields. Useful inside one service, not between services."
+    },
+    {
+      "id": "component",
+      "name": "Component diagram",
+      "view": "structure",
+      "question": "Which parts does the system have, and which part is connected to which?",
+      "showsOrder": false,
+      "generated": "component",
+      "useInProject": "Page, gateway, three campus services, queue, notifier and the three outside APIs."
+    },
+    {
+      "id": "sequence",
+      "name": "Sequence diagram",
+      "view": "behavior",
+      "question": "In which order do the parts send messages to each other?",
+      "showsOrder": true,
+      "generated": "sequence",
+      "useInProject": "One call of POST /api/requests, from the page to the answer, with the four parallel checks."
+    },
+    {
+      "id": "state",
+      "name": "State diagram",
+      "view": "behavior",
+      "question": "Which states does one thing go through, and what moves it from one to the next?",
+      "showsOrder": true,
+      "generated": "state",
+      "useInProject": "The life of an event request: Pending, Approved, Returned, On hold."
+    },
+    {
+      "id": "activity",
+      "name": "Activity diagram",
+      "view": "behavior",
+      "question": "Which steps does a process have, and where does it split or join?",
+      "showsOrder": true,
+      "generated": null,
+      "useInProject": "Already drawn as the BPMN process of episode 2, so no second diagram is needed."
+    },
+    {
+      "id": "deployment",
+      "name": "Deployment diagram",
+      "view": "structure",
+      "question": "On which machines and processes does the software run, and on which ports?",
+      "showsOrder": false,
+      "generated": "deployment",
+      "useInProject": "Browser, one Node.js process per service and the gateway, and the internet."
+    }
+  ]
+}

@@ -1,0 +1,1476 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Campus Event Planner: internal services",
+    "version": "1.0.0",
+    "description": "Student Affairs (port 4001), Finance (4002) and Facilities (4003). Errors always use { error: { code, message } }. Dates are ISO 8601 text. Money is { amount, currency }; the deposits and penalties are in pesos."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4001",
+      "description": "Student Affairs"
+    },
+    {
+      "url": "http://localhost:4002",
+      "description": "Finance"
+    },
+    {
+      "url": "http://localhost:4003",
+      "description": "Facilities"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Student Affairs",
+      "description": "Event requests"
+    },
+    {
+      "name": "Finance",
+      "description": "Deposits and payments"
+    },
+    {
+      "name": "Facilities",
+      "description": "Venues and reservations"
+    }
+  ],
+  "paths": {
+    "/requests": {
+      "servers": [
+        {
+          "url": "http://localhost:4001"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Student Affairs"
+        ],
+        "operationId": "listRequests",
+        "summary": "List the event requests",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Only requests with this status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Pending",
+                "On hold",
+                "Approved",
+                "Returned"
+              ]
+            },
+            "example": "On hold"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventRequest"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The status is not one of the four",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INVALID_STATUS",
+                    "message": "status must be one of: Pending, On hold, Approved, Returned"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Student Affairs"
+        ],
+        "operationId": "createRequest",
+        "summary": "Submit a new event request (it starts as Pending)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewEventRequest"
+              },
+              "example": {
+                "title": "Quiz Night",
+                "organization": "Math Club",
+                "date": "2027-05-20",
+                "venue": "Lab A",
+                "attendees": 35,
+                "budget": {
+                  "amount": 1200,
+                  "currency": "PHP"
+                },
+                "contactEmail": "math@campus.example"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The request was created",
+            "headers": {
+              "Location": {
+                "description": "The address of the new resource",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventRequest"
+                },
+                "example": {
+                  "requestNo": "EVT-0009",
+                  "title": "Quiz Night",
+                  "organization": "Math Club",
+                  "date": "2027-05-20",
+                  "status": "Pending",
+                  "venue": "Lab A",
+                  "attendees": 35,
+                  "budget": {
+                    "amount": 1200,
+                    "currency": "PHP"
+                  },
+                  "outdoor": false,
+                  "contactEmail": "math@campus.example"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The missing and invalid fields are listed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_FAILED",
+                    "message": "The request body has problems (missing: organization, venue)",
+                    "missing": [
+                      "organization",
+                      "venue"
+                    ],
+                    "invalid": []
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/requests/{requestNo}": {
+      "servers": [
+        {
+          "url": "http://localhost:4001"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Student Affairs"
+        ],
+        "operationId": "getRequest",
+        "summary": "Read one request",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No request EVT-9999"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Student Affairs"
+        ],
+        "operationId": "changeRequestStatus",
+        "summary": "Change the status of a request (only status can change)",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0001"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusChange"
+              },
+              "example": {
+                "status": "Approved"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request with its new status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Status is missing or not valid, or other fields were sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_FAILED",
+                    "message": "The request body has problems (invalid: status)",
+                    "missing": [],
+                    "invalid": [
+                      "status"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No request EVT-9999"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Student Affairs"
+        ],
+        "operationId": "withdrawRequest",
+        "summary": "Withdraw a Pending request",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0005"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Withdrawn, no body"
+          },
+          "404": {
+            "description": "No such request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No request EVT-9999"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Only a Pending request can be withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_PENDING",
+                    "message": "Only a Pending request can be withdrawn, this one is On hold"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deposits/{requestNo}": {
+      "servers": [
+        {
+          "url": "http://localhost:4002"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Finance"
+        ],
+        "operationId": "getDeposit",
+        "summary": "The unpaid balance of a request (0 = paid)",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0004"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deposit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Deposit"
+                },
+                "example": {
+                  "requestNo": "EVT-0004",
+                  "balancePhp": 320
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No deposit record for this request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No deposit record for EVT-9999"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deposits/{requestNo}/payments": {
+      "servers": [
+        {
+          "url": "http://localhost:4002"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Finance"
+        ],
+        "operationId": "listPayments",
+        "summary": "The payments made for a request",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0004"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of payments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Payment"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No deposit record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No deposit record for EVT-9999"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Finance"
+        ],
+        "operationId": "makePayment",
+        "summary": "Pay part or all of the balance",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0004"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPayment"
+              },
+              "example": {
+                "amountPhp": 120
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The payment was recorded",
+            "headers": {
+              "Location": {
+                "description": "The address of the new resource",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                },
+                "example": {
+                  "id": 1,
+                  "requestNo": "EVT-0004",
+                  "amountPhp": 120,
+                  "balancePhp": 200
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "AmountPhp is missing or not a positive amount",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_FAILED",
+                    "message": "The request body has problems (missing: amountPhp)",
+                    "missing": [
+                      "amountPhp"
+                    ],
+                    "invalid": []
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No deposit record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No deposit record for EVT-9999"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The deposit is already paid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ALREADY_PAID",
+                    "message": "The deposit of EVT-0001 is already paid"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The payment is more than the balance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "OVERPAYMENT",
+                    "message": "The payment is more than the balance of 320 PHP"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deposits/{requestNo}/payments/{id}": {
+      "servers": [
+        {
+          "url": "http://localhost:4002"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Finance"
+        ],
+        "operationId": "getPayment",
+        "summary": "One payment",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0004"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The payment number of this request",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "example": "1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No payment 1 for EVT-0004"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/venues": {
+      "servers": [
+        {
+          "url": "http://localhost:4003"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Facilities"
+        ],
+        "operationId": "listVenues",
+        "summary": "List the venues",
+        "parameters": [
+          {
+            "name": "minCapacity",
+            "in": "query",
+            "required": false,
+            "description": "Only venues that hold at least this many people",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 300
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of venues",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Venue"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "MinCapacity is not a whole number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_FAILED",
+                    "message": "The request body has problems (missing: )",
+                    "missing": [],
+                    "invalid": [
+                      "minCapacity"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/venues/{id}": {
+      "servers": [
+        {
+          "url": "http://localhost:4003"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Facilities"
+        ],
+        "operationId": "getVenue",
+        "summary": "Read one venue",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The venue id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "room-101"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The venue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Venue"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such venue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No venue ballroom"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/venues/{id}/availability": {
+      "servers": [
+        {
+          "url": "http://localhost:4003"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Facilities"
+        ],
+        "operationId": "venueAvailability",
+        "summary": "Can the venue be used on a date? (a question, so a GET)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The venue id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "room-101"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "description": "ISO date",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2027-11-22"
+          },
+          {
+            "name": "attendees",
+            "in": "query",
+            "required": false,
+            "description": "Number of people",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 80
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The answer, with the reasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Availability"
+                },
+                "example": {
+                  "venue": "Room 101",
+                  "date": "2027-11-22",
+                  "available": true,
+                  "capacityOk": false,
+                  "penaltyPhp": 50,
+                  "reasons": [
+                    "Room 101 holds 60 people, not 80",
+                    "Room 101 has an unpaid penalty of 50 PHP"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Date is missing or not an ISO date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_FAILED",
+                    "message": "The request body has problems (missing: date)",
+                    "missing": [
+                      "date"
+                    ],
+                    "invalid": []
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such venue",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No venue ballroom"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations": {
+      "servers": [
+        {
+          "url": "http://localhost:4003"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Facilities"
+        ],
+        "operationId": "listReservations",
+        "summary": "List the reservations",
+        "parameters": [
+          {
+            "name": "venueId",
+            "in": "query",
+            "required": false,
+            "description": "Only this venue",
+            "schema": {
+              "type": "string"
+            },
+            "example": "atrium"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "description": "Only this date",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2027-08-02"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of reservations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reservation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Facilities"
+        ],
+        "operationId": "createReservation",
+        "summary": "Reserve a venue for a request",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reservation"
+              },
+              "example": {
+                "requestNo": "EVT-0001",
+                "venueId": "gym",
+                "date": "2027-03-04",
+                "hours": 4
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The venue is reserved",
+            "headers": {
+              "Location": {
+                "description": "The address of the new resource",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Fields are missing or invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_FAILED",
+                    "message": "The request body has problems (missing: date)",
+                    "missing": [
+                      "date"
+                    ],
+                    "invalid": []
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The venue is already reserved that date, or the request already has a reservation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ALREADY_RESERVED",
+                    "message": "Gym is already reserved on 2027-03-05"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The body names a venue that does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNKNOWN_VENUE",
+                    "message": "There is no venue ballroom"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations/{requestNo}": {
+      "servers": [
+        {
+          "url": "http://localhost:4003"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Facilities"
+        ],
+        "operationId": "getReservation",
+        "summary": "The reservation of one request",
+        "parameters": [
+          {
+            "name": "requestNo",
+            "in": "path",
+            "description": "The request number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EVT-0006"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The reservation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No reservation for this request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "No reservation for EVT-0099"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "servers": [
+        {
+          "url": "http://localhost:4001"
+        },
+        {
+          "url": "http://localhost:4002"
+        },
+        {
+          "url": "http://localhost:4003"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Student Affairs",
+          "Finance",
+          "Facilities"
+        ],
+        "operationId": "health",
+        "summary": "Is the service running? (all three services answer it)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                },
+                "example": {
+                  "status": "ok",
+                  "service": "student-affairs"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Money": {
+        "type": "object",
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 500
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD"
+          }
+        }
+      },
+      "EventRequest": {
+        "type": "object",
+        "required": [
+          "requestNo",
+          "title",
+          "organization",
+          "date",
+          "status",
+          "venue",
+          "attendees",
+          "budget",
+          "outdoor",
+          "contactEmail"
+        ],
+        "properties": {
+          "requestNo": {
+            "type": "string",
+            "example": "EVT-0001"
+          },
+          "title": {
+            "type": "string"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Pending",
+              "On hold",
+              "Approved",
+              "Returned"
+            ]
+          },
+          "venue": {
+            "type": "string",
+            "example": "Gym"
+          },
+          "attendees": {
+            "type": "integer"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "outdoor": {
+            "type": "boolean"
+          },
+          "contactEmail": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "NewEventRequest": {
+        "type": "object",
+        "required": [
+          "title",
+          "organization",
+          "date",
+          "venue",
+          "attendees",
+          "budget",
+          "contactEmail"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "venue": {
+            "type": "string"
+          },
+          "attendees": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "budget": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "outdoor": {
+            "type": "boolean",
+            "default": false
+          },
+          "contactEmail": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "StatusChange": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Pending",
+              "On hold",
+              "Approved",
+              "Returned"
+            ]
+          }
+        }
+      },
+      "Deposit": {
+        "type": "object",
+        "required": [
+          "requestNo",
+          "balancePhp"
+        ],
+        "properties": {
+          "requestNo": {
+            "type": "string"
+          },
+          "balancePhp": {
+            "type": "number",
+            "description": "Still unpaid, in pesos; 0 means paid"
+          }
+        }
+      },
+      "NewPayment": {
+        "type": "object",
+        "required": [
+          "amountPhp"
+        ],
+        "properties": {
+          "amountPhp": {
+            "type": "number",
+            "minimum": 0.01
+          }
+        }
+      },
+      "Payment": {
+        "type": "object",
+        "required": [
+          "id",
+          "requestNo",
+          "amountPhp",
+          "balancePhp"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "requestNo": {
+            "type": "string"
+          },
+          "amountPhp": {
+            "type": "number"
+          },
+          "balancePhp": {
+            "type": "number",
+            "description": "The balance after this payment"
+          }
+        }
+      },
+      "Venue": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "capacity",
+          "outdoor",
+          "penaltyPhp"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "gym"
+          },
+          "name": {
+            "type": "string",
+            "example": "Gym"
+          },
+          "capacity": {
+            "type": "integer"
+          },
+          "outdoor": {
+            "type": "boolean"
+          },
+          "penaltyPhp": {
+            "type": "number",
+            "description": "Unpaid facility penalty in pesos"
+          }
+        }
+      },
+      "Availability": {
+        "type": "object",
+        "required": [
+          "venue",
+          "date",
+          "available",
+          "capacityOk",
+          "penaltyPhp",
+          "reasons"
+        ],
+        "properties": {
+          "venue": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "capacityOk": {
+            "type": "boolean"
+          },
+          "penaltyPhp": {
+            "type": "number"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Reservation": {
+        "type": "object",
+        "required": [
+          "requestNo",
+          "venueId",
+          "date",
+          "hours"
+        ],
+        "properties": {
+          "requestNo": {
+            "type": "string"
+          },
+          "venueId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "hours": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": [
+          "status",
+          "service"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          },
+          "service": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "NOT_FOUND"
+              },
+              "message": {
+                "type": "string"
+              },
+              "missing": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Fields that were not sent (400)"
+              },
+              "invalid": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Fields with a value that is not acceptable (400)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

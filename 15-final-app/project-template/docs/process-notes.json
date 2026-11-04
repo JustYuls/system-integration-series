@@ -1,0 +1,21 @@
+{
+  "purpose": "TODO: one sentence. Decide whether a request can be approved, using the rules of the organization and facts from three systems and one outside API.",
+  "rules": {
+    "BR-01": "A request cannot be approved on a public holiday.",
+    "BR-02": "The customer must be known and active.",
+    "BR-03": "The stock of the item must cover the quantity.",
+    "BR-04": "The account of the customer must have no unpaid balance.",
+    "BR-05": "Every request names a customer, an item, a quantity and a date.",
+    "BR-06": "A request is approved only when every check passed."
+  },
+  "tasks": {
+    "T01": { "actor": "Customer", "system": "Web page", "externalApi": null, "inputs": ["customerId", "itemId", "quantity", "date"], "outputs": ["request"], "rules": ["BR-05"], "exceptions": ["The form is incomplete: show the missing fields."] },
+    "T02": { "actor": "Planner System", "system": "Holiday service", "externalApi": "Nager.Date", "inputs": ["date"], "outputs": ["date check"], "rules": ["BR-01"], "exceptions": ["The service does not answer: the check is unknown and a person decides."] },
+    "T03": { "actor": "Planner System", "system": "Customers service", "externalApi": null, "inputs": ["customerId"], "outputs": ["customer check"], "rules": ["BR-02"], "exceptions": ["The service does not answer: the check is unknown and a person decides."] },
+    "T04": { "actor": "Planner System", "system": "Items service", "externalApi": null, "inputs": ["itemId", "quantity"], "outputs": ["stock check"], "rules": ["BR-03"], "exceptions": ["The service does not answer: the check is unknown and a person decides."] },
+    "T05": { "actor": "Planner System", "system": "Accounts service", "externalApi": null, "inputs": ["customerId"], "outputs": ["payment check"], "rules": ["BR-04"], "exceptions": ["The service does not answer: the check is unknown and a person decides."] },
+    "T06": { "actor": "Staff", "system": "Planner", "externalApi": null, "inputs": ["all checks passed"], "outputs": ["status Approved"], "rules": ["BR-06"], "exceptions": [] },
+    "T07": { "actor": "Staff", "system": "Planner", "externalApi": null, "inputs": ["a failed check"], "outputs": ["status Returned, with the reasons"], "rules": [], "exceptions": [] },
+    "T08": { "actor": "Planner System", "system": "Message queue", "externalApi": null, "inputs": ["decision", "reasons"], "outputs": ["message to the customer"], "rules": [], "exceptions": ["The mail server fails: the queue retries three times."] }
+  }
+}

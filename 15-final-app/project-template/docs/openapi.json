@@ -1,0 +1,20 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "My integration project API", "version": "0.1.0" },
+  "paths": {
+    "/api/requests": {
+      "post": {
+        "summary": "Send a request; the planner runs the whole process",
+        "responses": { "201": { "description": "The assessment" }, "400": { "description": "Missing or invalid fields" } }
+      }
+    },
+    "/api/requests/{requestId}/assessment": {
+      "get": {
+        "summary": "The stored assessment of a request",
+        "parameters": [{ "name": "requestId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "The assessment" }, "404": { "description": "Not planned yet" } }
+      }
+    },
+    "/health": { "get": { "summary": "Are the services up?", "responses": { "200": { "description": "ok or degraded" } } } }
+  }
+}

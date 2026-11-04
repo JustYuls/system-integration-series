@@ -1,0 +1,16 @@
+{
+  "name": "my-integration-project",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A starting point for the final project: the course application with placeholder services and APIs",
+  "scripts": {
+    "start": "node start-all.js",
+    "check-docs": "node check-docs.js",
+    "verify": "node verify.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

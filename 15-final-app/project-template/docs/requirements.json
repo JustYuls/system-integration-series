@@ -1,0 +1,21 @@
+{
+  "note": "Two EXAMPLES. Write one requirement for every task of your process: node check-docs.js lists the tasks that still have none.",
+  "functional": [
+    {
+      "id": "FR-01", "task": "T01", "actor": "Customer", "priority": "Must", "rules": ["BR-05"],
+      "statement": "The system shall list the missing fields when a customer submits a request without a customer id, an item id, a quantity or a date.",
+      "acceptance": [
+        "Given a request without a quantity, when the customer submits it, then the system lists quantity as missing and creates no request.",
+        "Given a complete request, when the customer submits it, then the system accepts it and gives it a request number."
+      ]
+    },
+    {
+      "id": "FR-02", "task": "T04", "actor": "Planner System", "priority": "Must", "rules": ["BR-03"],
+      "statement": "The system shall mark the stock check as failed when the stock of the item is lower than the requested quantity.",
+      "acceptance": [
+        "Given the Laptop has 0 in stock, when a request asks for 1 Laptop, then the stock check fails and names the stock.",
+        "Given the Projector has 5 in stock, when a request asks for 2 Projectors, then the stock check passes."
+      ]
+    }
+  ]
+}

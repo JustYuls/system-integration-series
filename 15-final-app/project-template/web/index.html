@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My integration project</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>My integration project</h1>
+    <form id="form">
+      <label for="customerId">Customer id</label>
+      <input id="customerId" value="1" required>
+      <label for="itemId">Item id</label>
+      <input id="itemId" value="1" required>
+      <label for="quantity">Quantity</label>
+      <input id="quantity" type="number" min="1" value="2" required>
+      <label for="date">Date</label>
+      <input id="date" type="date" value="2027-03-04" required>
+      <button type="submit">Send the request</button>
+    </form>
+    <section id="card" class="card" hidden aria-live="polite">
+      <h2 id="decision"></h2>
+      <ul id="reasons"></ul>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

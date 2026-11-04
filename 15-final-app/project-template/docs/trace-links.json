@@ -1,0 +1,11 @@
+{
+  "note": "What builds each requirement and what proves it. The test tag is the requirement id: put it in the name of the test, like [FR-01].",
+  "functional": {
+    "FR-01": { "task": "T01", "endpoint": "POST /api/requests", "testTag": "FR-01" },
+    "FR-02": { "task": "T04", "endpoint": "POST /api/requests", "testTag": "FR-02" }
+  },
+  "nonFunctional": {
+    "NFR-01": { "verification": "test", "testTag": "NFR-01" },
+    "NFR-02": { "verification": "test", "testTag": "NFR-02" }
+  }
+}

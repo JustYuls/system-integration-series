@@ -1,0 +1,10 @@
+/* A small, readable page: a form and a decision card. Color is never the only signal: the card also says the word. */
+body { font-family: system-ui, sans-serif; margin: 0; background: #f4f6fb; color: #16202f; }
+main { max-width: 36rem; margin: 2rem auto; padding: 0 1rem; }
+form { display: grid; gap: 0.4rem; background: #fff; padding: 1rem; border-radius: 0.6rem; }
+input, button { font: inherit; padding: 0.5rem; }
+button { background: #0b5cad; color: #fff; border: 0; border-radius: 0.4rem; margin-top: 0.6rem; cursor: pointer; }
+.card { margin-top: 1rem; padding: 1rem; border-radius: 0.6rem; border-left: 0.5rem solid #888; background: #fff; }
+.card.approved { border-color: #14663a; }
+.card.returned, .card.error { border-color: #b3261e; }
+.card.needs-review { border-color: #b26a00; }

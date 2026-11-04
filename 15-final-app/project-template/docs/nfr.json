@@ -1,0 +1,19 @@
+{
+  "note": "Two EXAMPLES. Each one has a number, a metric, a target and a way to measure it.",
+  "nonFunctional": [
+    {
+      "id": "NFR-01", "category": "performance",
+      "statement": "The planner shall give a decision within 3000 ms for 95 percent of requests.",
+      "metric": "95th percentile of the time from request to decision",
+      "target": { "value": 3000, "unit": "ms", "comparison": "<=" },
+      "measure": "A test sends 20 requests to a planner with fake outside services and takes the 95th percentile."
+    },
+    {
+      "id": "NFR-02", "category": "availability",
+      "statement": "When an outside API is down, the planner shall still answer, and the decision shall be needs-review.",
+      "metric": "share of requests answered while the outside API is down",
+      "target": { "value": 100, "unit": "percent", "comparison": ">=" },
+      "measure": "An integration test switches the fake holiday API off and checks for a needs-review answer."
+    }
+  ]
+}

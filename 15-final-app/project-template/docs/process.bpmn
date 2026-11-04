@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A SKELETON. Draw YOUR process in Draw.io (diagrams.net), export it as BPMN, and replace this file.
+     Rules the checkers of this template expect: lanes, ids like T01 for tasks, one start and one end event,
+     and the decision gateway with the id G3 and the flow labels Yes and No. -->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="defs" targetNamespace="http://example.com/my-project">
+  <process id="my_process" name="My request process" isExecutable="false">
+    <laneSet id="lanes">
+      <lane id="L1" name="Customer"><flowNodeRef>S1</flowNodeRef><flowNodeRef>T01</flowNodeRef><flowNodeRef>E1</flowNodeRef></lane>
+      <lane id="L2" name="Planner System"><flowNodeRef>G1</flowNodeRef><flowNodeRef>T02</flowNodeRef><flowNodeRef>T03</flowNodeRef><flowNodeRef>T04</flowNodeRef><flowNodeRef>T05</flowNodeRef><flowNodeRef>G2</flowNodeRef><flowNodeRef>G3</flowNodeRef><flowNodeRef>G4</flowNodeRef><flowNodeRef>T08</flowNodeRef></lane>
+      <lane id="L3" name="Staff"><flowNodeRef>T06</flowNodeRef><flowNodeRef>T07</flowNodeRef></lane>
+    </laneSet>
+    <startEvent id="S1" name="Need arrives"/>
+    <userTask id="T01" name="Submit request"/>
+    <parallelGateway id="G1" name="Run the checks"/>
+    <serviceTask id="T02" name="Check the date"/>
+    <serviceTask id="T03" name="Check the customer"/>
+    <serviceTask id="T04" name="Check the stock"/>
+    <serviceTask id="T05" name="Check the payment"/>
+    <parallelGateway id="G2" name="All checks done"/>
+    <exclusiveGateway id="G3" name="All checks passed?"/>
+    <userTask id="T06" name="Approve request"/>
+    <userTask id="T07" name="Return request"/>
+    <exclusiveGateway id="G4" name="Decision made"/>
+    <sendTask id="T08" name="Notify customer"/>
+    <endEvent id="E1" name="Customer notified"/>
+    <sequenceFlow id="F01" sourceRef="S1" targetRef="T01"/>
+    <sequenceFlow id="F02" sourceRef="T01" targetRef="G1"/>
+    <sequenceFlow id="F03" sourceRef="G1" targetRef="T02"/>
+    <sequenceFlow id="F04" sourceRef="G1" targetRef="T03"/>
+    <sequenceFlow id="F05" sourceRef="G1" targetRef="T04"/>
+    <sequenceFlow id="F06" sourceRef="G1" targetRef="T05"/>
+    <sequenceFlow id="F07" sourceRef="T02" targetRef="G2"/>
+    <sequenceFlow id="F08" sourceRef="T03" targetRef="G2"/>
+    <sequenceFlow id="F09" sourceRef="T04" targetRef="G2"/>
+    <sequenceFlow id="F10" sourceRef="T05" targetRef="G2"/>
+    <sequenceFlow id="F11" sourceRef="G2" targetRef="G3"/>
+    <sequenceFlow id="F12" name="Yes" sourceRef="G3" targetRef="T06"/>
+    <sequenceFlow id="F13" name="No" sourceRef="G3" targetRef="T07"/>
+    <sequenceFlow id="F14" sourceRef="T06" targetRef="G4"/>
+    <sequenceFlow id="F15" sourceRef="T07" targetRef="G4"/>
+    <sequenceFlow id="F16" sourceRef="G4" targetRef="T08"/>
+    <sequenceFlow id="F17" sourceRef="T08" targetRef="E1"/>
+  </process>
+</definitions>

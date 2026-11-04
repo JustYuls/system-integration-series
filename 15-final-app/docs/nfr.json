@@ -1,0 +1,60 @@
+{
+  "nonFunctional": [
+    {
+      "id": "NFR-01", "category": "performance",
+      "statement": "The planner shall give a planning decision within 3000 ms for 95 percent of requests.",
+      "metric": "95th percentile of the time from request to decision",
+      "target": { "value": 3000, "unit": "ms", "comparison": "<=" },
+      "measure": "measure-apis.js times the three outside calls; the slowest p95 plus 500 ms of our own work must fit."
+    },
+    {
+      "id": "NFR-02", "category": "availability",
+      "statement": "When an outside API is down, the planner shall still answer, and the decision shall be needs-review.",
+      "metric": "share of planning requests answered while one outside API is down",
+      "target": { "value": 100, "unit": "percent", "comparison": ">=" },
+      "measure": "An integration test makes each outside API fail in turn and checks for a needs-review answer."
+    },
+    {
+      "id": "NFR-03", "category": "reliability",
+      "statement": "The planner shall retry a failed outside call up to 3 times before it gives up.",
+      "metric": "attempts made for one failing outside call",
+      "target": { "value": 3, "unit": "attempts", "comparison": "<=" },
+      "measure": "A unit test with a fake fetch that always fails counts the attempts."
+    },
+    {
+      "id": "NFR-04", "category": "security",
+      "statement": "The repository shall hold no secrets or API keys, and the planner shall validate all input.",
+      "metric": "secrets found in the repository, plus inputs accepted without validation",
+      "target": { "value": 0, "unit": "findings", "comparison": "=" },
+      "measure": "A test scans the source files for key patterns; each endpoint test sends one bad input and expects 400."
+    },
+    {
+      "id": "NFR-05", "category": "usability",
+      "statement": "The planner shall give the organizer every reason for a decision in plain language.",
+      "metric": "share of decisions whose reasons are full sentences without codes",
+      "target": { "value": 100, "unit": "percent", "comparison": ">=" },
+      "measure": "A test reads the reasons of the seven seed requests and rejects codes such as BR-03."
+    },
+    {
+      "id": "NFR-06", "category": "interoperability",
+      "statement": "The planner shall exchange JSON over HTTP, write dates in ISO 8601, and write currencies as ISO 4217 codes.",
+      "metric": "share of responses that follow all three conventions",
+      "target": { "value": 100, "unit": "percent", "comparison": ">=" },
+      "measure": "A contract test checks the content type, the date format, and the currency code of each response."
+    },
+    {
+      "id": "NFR-07", "category": "maintainability",
+      "statement": "Every endpoint of the planner shall have at least one automated test.",
+      "metric": "share of endpoints with an automated test",
+      "target": { "value": 100, "unit": "percent", "comparison": ">=" },
+      "measure": "verify.js lists the endpoints of the OpenAPI file and looks for a tagged test of each."
+    },
+    {
+      "id": "NFR-08", "category": "capacity",
+      "statement": "The planner shall handle 20 planning requests per minute without errors.",
+      "metric": "planning requests handled per minute without an error",
+      "target": { "value": 20, "unit": "requests per minute", "comparison": ">=" },
+      "measure": "A load test sends 20 requests in one minute to a planner with fake outside services."
+    }
+  ]
+}
