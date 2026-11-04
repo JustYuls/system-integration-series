@@ -1,0 +1,56 @@
+{
+  "title": "Architecture decision: monolith, SOA with an ESB, or microservices behind an API gateway",
+  "question": "How should the Campus Event Planner connect Student Affairs, Finance and Facilities?",
+  "scale": "Ratings: 1 = poor, 5 = very good. For simplicity, performance, skills and cost, 5 means simple, fast, familiar, cheap.",
+  "weightRule": "A criterion's weight is the points of its NFR category (Must 3, Should 2, Could 1, see src/strategy.js and docs/nfr.json). Skills and cost are project constraints worth 3 points each.",
+  "criteria": [
+    { "id": "deployment", "name": "Independent deployment", "category": "maintainability", "weight": 2, "question": "Can one system change without redeploying the others?" },
+    { "id": "isolation", "name": "Fault isolation", "category": "availability", "weight": 3, "question": "When one part fails, do the other parts keep answering? (NFR-02)" },
+    { "id": "simplicity", "name": "Simplicity for a student team", "category": "usability", "weight": 2, "question": "How easy is it to understand, run and debug?" },
+    { "id": "performance", "name": "Performance overhead", "category": "performance", "weight": 3, "question": "How little time does the design add to a request? (NFR-01)" },
+    { "id": "skills", "name": "Team skills", "category": null, "weight": 3, "question": "Does the team already know the technology?" },
+    { "id": "cost", "name": "Cost", "category": null, "weight": 3, "question": "How cheap is it to build and to run for one semester?" }
+  ],
+  "options": [
+    {
+      "id": "monolith",
+      "name": "Monolith",
+      "idea": "One application holds all the code and one database.",
+      "ratings": {
+        "deployment": { "rating": 1, "why": "every change redeploys the whole application" },
+        "isolation": { "rating": 1, "why": "one crash or one slow module stops everything" },
+        "simplicity": { "rating": 5, "why": "one project, one process, one debugger" },
+        "performance": { "rating": 5, "why": "calls between modules are plain function calls" },
+        "skills": { "rating": 4, "why": "students know one Express app, but not merging three systems" },
+        "cost": { "rating": 4, "why": "one server, but the three existing systems must be migrated into it" }
+      }
+    },
+    {
+      "id": "soa-esb",
+      "name": "SOA with an ESB",
+      "idea": "Services talk through a central enterprise service bus that routes and transforms messages.",
+      "ratings": {
+        "deployment": { "rating": 3, "why": "services deploy alone, but the bus configuration changes with them" },
+        "isolation": { "rating": 2, "why": "the bus is a single point of failure for every call" },
+        "simplicity": { "rating": 1, "why": "bus products and their configuration are heavy to learn" },
+        "performance": { "rating": 2, "why": "every message is routed and transformed by the bus" },
+        "skills": { "rating": 2, "why": "nobody in the team has used an ESB product" },
+        "cost": { "rating": 1, "why": "licences or a big server, plus setup time" }
+      }
+    },
+    {
+      "id": "microservices-gateway",
+      "name": "Microservices behind an API gateway",
+      "idea": "Small services own their data and are reached through one thin gateway.",
+      "ratings": {
+        "deployment": { "rating": 5, "why": "each service has its own process and release" },
+        "isolation": { "rating": 4, "why": "timeouts and 502/504 keep one failure from spreading; the gateway itself is still one point" },
+        "simplicity": { "rating": 3, "why": "more parts to start, but each part is small Express code" },
+        "performance": { "rating": 3, "why": "one extra network hop per call" },
+        "skills": { "rating": 3, "why": "Express and REST were learned in episode 9" },
+        "cost": { "rating": 3, "why": "three small processes and a gateway: cheap, but more than one" }
+      }
+    }
+  ],
+  "context": "The three systems already exist apart, with different owners and formats (the silos of episode 1). That is why the gateway design is considered at all."
+}

@@ -1,0 +1,40 @@
+{
+  "risks": [
+    {
+      "id": "RISK-1", "title": "An outside API answers slowly",
+      "likelihood": "Medium", "impact": "High", "nfr": "NFR-01",
+      "mitigation": "Call the three outside APIs in parallel, give each a timeout of 800 ms, and keep our own work under 500 ms."
+    },
+    {
+      "id": "RISK-2", "title": "An outside API is down",
+      "likelihood": "Medium", "impact": "High", "nfr": "NFR-02",
+      "mitigation": "Return needs-review instead of an error, cache the last good answer, and open a circuit breaker after repeated failures."
+    },
+    {
+      "id": "RISK-3", "title": "A retry repeats a payment or a notice",
+      "likelihood": "Low", "impact": "High", "nfr": "NFR-03",
+      "mitigation": "Retry only safe calls, at most 3 attempts with growing waits, and key every notice by its request number."
+    },
+    {
+      "id": "RISK-4", "title": "A secret or bad input gets into the system",
+      "likelihood": "Low", "impact": "High", "nfr": "NFR-04",
+      "mitigation": "Keys come from environment variables, every endpoint validates input, and a test scans the source for key patterns."
+    },
+    {
+      "id": "RISK-5", "title": "A crowd of organizers asks on the same day",
+      "likelihood": "Medium", "impact": "Medium", "nfr": "NFR-08",
+      "mitigation": "Send the notice through the queue so the answer does not wait for e-mail, and run a load test of 20 requests a minute."
+    },
+    {
+      "id": "RISK-6", "title": "The systems disagree about formats",
+      "likelihood": "High", "impact": "Medium", "nfr": "NFR-06",
+      "mitigation": "One standard for the whole API: JSON, ISO 8601 dates and ISO 4217 currency codes, checked by a contract test."
+    }
+  ],
+  "assumptions": [
+    "The three outside APIs stay free and keep their current format.",
+    "The three campus systems can offer a REST interface without a new product.",
+    "The team is a small student team with one semester to build.",
+    "The ratings of the options are our judgment, and every weight can be changed and scored again."
+  ]
+}
