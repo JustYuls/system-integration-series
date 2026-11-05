@@ -1,0 +1,210 @@
+[
+  {
+    "id": "start-none", "name": "Start event", "category": "events", "xml": "startEvent",
+    "shape": "thin circle", "marker": "none",
+    "meaning": "The process begins here.",
+    "useWhen": "Use exactly one to show what triggers the process.",
+    "example": "Event idea ready",
+    "commonMistake": "Starting the diagram with a task box and no start event."
+  },
+  {
+    "id": "start-message", "name": "Message start event", "category": "events", "xml": "startEvent",
+    "shape": "thin circle", "marker": "envelope",
+    "meaning": "The process begins when a message arrives.",
+    "useWhen": "Use when something from outside starts the process.",
+    "example": "Booking request received",
+    "commonMistake": "Drawing an envelope when nothing is really received."
+  },
+  {
+    "id": "start-timer", "name": "Timer start event", "category": "events", "xml": "startEvent",
+    "shape": "thin circle", "marker": "clock",
+    "meaning": "The process begins at a set time or on a schedule.",
+    "useWhen": "Use for work that runs on a schedule.",
+    "example": "Every Monday 8:00, list pending requests",
+    "commonMistake": "Using it for a short wait in the middle; that is an intermediate timer."
+  },
+  {
+    "id": "intermediate-message", "name": "Message intermediate event", "category": "events", "xml": "intermediateCatchEvent",
+    "shape": "double circle", "marker": "envelope",
+    "meaning": "The process waits in the middle for a message to arrive.",
+    "useWhen": "Use when the flow must pause until a reply comes.",
+    "example": "Venue reply received",
+    "commonMistake": "Using it to send mail; a send task says that better."
+  },
+  {
+    "id": "intermediate-timer", "name": "Timer intermediate event", "category": "events", "xml": "intermediateCatchEvent",
+    "shape": "double circle", "marker": "clock",
+    "meaning": "The process waits in the middle until a time has passed.",
+    "useWhen": "Use for a deadline or a pause.",
+    "example": "Wait 3 days for the deposit",
+    "commonMistake": "Forgetting to draw what happens when the time runs out."
+  },
+  {
+    "id": "end-none", "name": "End event", "category": "events", "xml": "endEvent",
+    "shape": "thick circle", "marker": "none",
+    "meaning": "This path of the process is finished.",
+    "useWhen": "Use one for each way the process can finish.",
+    "example": "Organizer notified",
+    "commonMistake": "Leaving a path with no end event."
+  },
+  {
+    "id": "end-message", "name": "Message end event", "category": "events", "xml": "endEvent",
+    "shape": "thick circle", "marker": "envelope",
+    "meaning": "The path ends, and the last thing is a message sent out.",
+    "useWhen": "Use when sending a final message is how the process finishes.",
+    "example": "Rejection letter sent",
+    "commonMistake": "Using it when more work follows the message."
+  },
+  {
+    "id": "end-terminate", "name": "Terminate end event", "category": "events", "xml": "endEvent",
+    "shape": "thick circle", "marker": "filled circle",
+    "meaning": "The whole process stops now, on every path.",
+    "useWhen": "Use to stop all parallel paths at once.",
+    "example": "Event cancelled",
+    "commonMistake": "Using it where a normal end would let the other paths finish."
+  },
+  {
+    "id": "task", "name": "Task", "category": "activities", "xml": "task",
+    "shape": "rounded rectangle", "marker": "none",
+    "meaning": "One piece of work, without saying who or what does it.",
+    "useWhen": "Use when the kind of worker does not matter yet.",
+    "example": "Review the request",
+    "commonMistake": "Naming it with a noun, like Request, instead of a verb and an object."
+  },
+  {
+    "id": "user-task", "name": "User task", "category": "activities", "xml": "userTask",
+    "shape": "rounded rectangle", "marker": "user",
+    "meaning": "A person does the work, using a screen or a form.",
+    "useWhen": "Use when a human has to act.",
+    "example": "Submit event request",
+    "commonMistake": "Using it for work that the system does by itself."
+  },
+  {
+    "id": "service-task", "name": "Service task", "category": "activities", "xml": "serviceTask",
+    "shape": "rounded rectangle", "marker": "gear",
+    "meaning": "The system does the work by itself, such as a call to a service.",
+    "useWhen": "Use for an automatic step.",
+    "example": "Check date for holidays",
+    "commonMistake": "Using it for work that a person has to do."
+  },
+  {
+    "id": "send-task", "name": "Send task", "category": "activities", "xml": "sendTask",
+    "shape": "rounded rectangle", "marker": "filled envelope",
+    "meaning": "The task sends a message to someone outside the step.",
+    "useWhen": "Use when the work is to send a message.",
+    "example": "Notify organizer",
+    "commonMistake": "Mixing it up with the receive task, whose envelope is empty."
+  },
+  {
+    "id": "receive-task", "name": "Receive task", "category": "activities", "xml": "receiveTask",
+    "shape": "rounded rectangle", "marker": "empty envelope",
+    "meaning": "The task waits until a message arrives.",
+    "useWhen": "Use when the process cannot go on without a reply.",
+    "example": "Receive payment confirmation",
+    "commonMistake": "Drawing a filled envelope, which means send."
+  },
+  {
+    "id": "subprocess", "name": "Collapsed sub-process", "category": "activities", "xml": "subProcess",
+    "shape": "rounded rectangle", "marker": "plus box",
+    "meaning": "A group of steps hidden inside one box.",
+    "useWhen": "Use to keep a big diagram short and readable.",
+    "example": "Run the checks",
+    "commonMistake": "Hiding steps that the reader needs to see."
+  },
+  {
+    "id": "call-activity", "name": "Call activity", "category": "activities", "xml": "callActivity",
+    "shape": "thick rounded rectangle", "marker": "plus box",
+    "meaning": "The step runs another process that is defined elsewhere and reused.",
+    "useWhen": "Use when several processes share the same steps.",
+    "example": "Check venue availability (shared)",
+    "commonMistake": "Copying the same steps into every diagram."
+  },
+  {
+    "id": "exclusive-gateway", "name": "Exclusive gateway", "category": "gateways", "xml": "exclusiveGateway",
+    "shape": "diamond", "marker": "X",
+    "meaning": "Choose exactly one path.",
+    "useWhen": "Use for a yes or no decision, or any choice of one.",
+    "example": "All checks passed?",
+    "commonMistake": "Leaving the choices without labels."
+  },
+  {
+    "id": "parallel-gateway", "name": "Parallel gateway", "category": "gateways", "xml": "parallelGateway",
+    "shape": "diamond", "marker": "plus",
+    "meaning": "Do all paths at the same time, and wait for all of them at the join.",
+    "useWhen": "Use for work that can happen together.",
+    "example": "Run the checks",
+    "commonMistake": "Splitting with a plus and never joining."
+  },
+  {
+    "id": "inclusive-gateway", "name": "Inclusive gateway", "category": "gateways", "xml": "inclusiveGateway",
+    "shape": "diamond", "marker": "circle",
+    "meaning": "Choose one path or more than one.",
+    "useWhen": "Use when any mix of the paths can be right.",
+    "example": "Send the receipt by email, by SMS, or both",
+    "commonMistake": "Using it when exactly one path is right."
+  },
+  {
+    "id": "event-gateway", "name": "Event-based gateway", "category": "gateways", "xml": "eventBasedGateway",
+    "shape": "diamond", "marker": "pentagon",
+    "meaning": "Wait for the first of several events, and follow that path.",
+    "useWhen": "Use when the outside world decides the path, such as a reply or a timeout.",
+    "example": "Wait for the deposit or for 3 days to pass",
+    "commonMistake": "Using an exclusive gateway when the path depends on which event comes first."
+  },
+  {
+    "id": "sequence-flow", "name": "Sequence flow", "category": "flows", "xml": "sequenceFlow",
+    "shape": "solid line with a filled arrowhead", "marker": "none", "scope": "inside one pool",
+    "meaning": "Shows the order of the steps inside one pool.",
+    "useWhen": "Use to connect events, tasks and gateways in order.",
+    "example": "Submit event request, then Run the checks",
+    "commonMistake": "Leaving a task with no incoming or no outgoing flow."
+  },
+  {
+    "id": "message-flow", "name": "Message flow", "category": "flows", "xml": "messageFlow",
+    "shape": "dashed line with an open circle at the start", "marker": "none", "scope": "between pools",
+    "meaning": "Shows a message travelling between two pools.",
+    "useWhen": "Use when two organizations or systems talk to each other.",
+    "example": "Student Affairs sends the decision to the organizer",
+    "commonMistake": "Using it between two tasks inside the same pool; use a sequence flow."
+  },
+  {
+    "id": "association", "name": "Association", "category": "flows", "xml": "association",
+    "shape": "dotted line", "marker": "none", "scope": "any element",
+    "meaning": "Links a note or a data object to an element.",
+    "useWhen": "Use to attach extra information, with no order implied.",
+    "example": "The form linked to Submit event request",
+    "commonMistake": "Using it to show the order of steps."
+  },
+  {
+    "id": "pool", "name": "Pool", "category": "swimlanes", "xml": "participant",
+    "shape": "large rectangle with a name band", "marker": "none",
+    "meaning": "One participant: an organization or a system with its own process.",
+    "useWhen": "Use one pool for each organization that takes part.",
+    "example": "Student Affairs",
+    "commonMistake": "Drawing two pools when everything happens inside one organization."
+  },
+  {
+    "id": "lane", "name": "Lane", "category": "swimlanes", "xml": "lane",
+    "shape": "horizontal band inside a pool", "marker": "none",
+    "meaning": "Shows who does each step inside a pool.",
+    "useWhen": "Use to answer the question: who does it?",
+    "example": "Organizer, Planner System, Student Affairs Officer",
+    "commonMistake": "Leaving a task outside every lane."
+  },
+  {
+    "id": "data-object", "name": "Data object", "category": "artifacts", "xml": "dataObject",
+    "shape": "page with a folded corner", "marker": "none",
+    "meaning": "Information that a task reads or writes.",
+    "useWhen": "Use to show a document or a record that matters.",
+    "example": "Event request form",
+    "commonMistake": "Treating it as a step; it is information, not work."
+  },
+  {
+    "id": "annotation", "name": "Annotation", "category": "artifacts", "xml": "textAnnotation",
+    "shape": "open bracket with text", "marker": "none",
+    "meaning": "A note that explains an element.",
+    "useWhen": "Use to explain a rule that the shapes cannot show.",
+    "example": "Only outdoor events need the weather check",
+    "commonMistake": "Hiding a business rule in the note instead of the diagram."
+  }
+]

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="defs" targetNamespace="http://campus.example/bpmn-symbols">
+  <process id="online_order" name="Online order" isExecutable="false">
+    <laneSet id="lanes">
+      <lane id="L1" name="Customer"><flowNodeRef>S1</flowNodeRef><flowNodeRef>E1</flowNodeRef><flowNodeRef>E2</flowNodeRef></lane>
+      <lane id="L2" name="Shop System"><flowNodeRef>G1</flowNodeRef><flowNodeRef>T02</flowNodeRef><flowNodeRef>T03</flowNodeRef><flowNodeRef>G2</flowNodeRef><flowNodeRef>G3</flowNodeRef><flowNodeRef>T05</flowNodeRef><flowNodeRef>T06</flowNodeRef></lane>
+      <lane id="L3" name="Warehouse"><flowNodeRef>T04</flowNodeRef></lane>
+    </laneSet>
+    <startEvent id="S1" name="Order placed"/>
+    <parallelGateway id="G1" name="Start both checks"/>
+    <serviceTask id="T02" name="Charge the payment"/>
+    <serviceTask id="T03" name="Check the stock"/>
+    <parallelGateway id="G2" name="Both checks done"/>
+    <exclusiveGateway id="G3" name="Payment and stock OK?"/>
+    <userTask id="T04" name="Pack the order"/>
+    <sendTask id="T05" name="Send shipping notice"/>
+    <sendTask id="T06" name="Send cancellation notice"/>
+    <endEvent id="E1" name="Order shipped"/>
+    <endEvent id="E2" name="Order cancelled"/>
+    <sequenceFlow id="F01" sourceRef="S1" targetRef="G1"/>
+    <sequenceFlow id="F02" sourceRef="G1" targetRef="T02"/>
+    <sequenceFlow id="F03" sourceRef="G1" targetRef="T03"/>
+    <sequenceFlow id="F04" sourceRef="T02" targetRef="G2"/>
+    <sequenceFlow id="F05" sourceRef="T03" targetRef="G2"/>
+    <sequenceFlow id="F06" sourceRef="G2" targetRef="G3"/>
+    <sequenceFlow id="F07" name="Yes" sourceRef="G3" targetRef="T04"/>
+    <sequenceFlow id="F08" name="No" sourceRef="G3" targetRef="T06"/>
+    <sequenceFlow id="F09" sourceRef="T04" targetRef="T05"/>
+    <sequenceFlow id="F10" sourceRef="T05" targetRef="E1"/>
+    <sequenceFlow id="F11" sourceRef="T06" targetRef="E2"/>
+  </process>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane" bpmnElement="online_order">
+      <bpmndi:BPMNShape id="shape_L1" bpmnElement="L1" isHorizontal="true"><dc:Bounds x="30" y="40" width="1830" height="130"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_L2" bpmnElement="L2" isHorizontal="true"><dc:Bounds x="30" y="170" width="1830" height="240"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_L3" bpmnElement="L3" isHorizontal="true"><dc:Bounds x="30" y="410" width="1830" height="130"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_S1" bpmnElement="S1"><dc:Bounds x="130" y="85" width="40" height="40"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_G1" bpmnElement="G1"><dc:Bounds x="333" y="208" width="54" height="54"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T02" bpmnElement="T02"><dc:Bounds x="495" y="197" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T03" bpmnElement="T03"><dc:Bounds x="495" y="307" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_G2" bpmnElement="G2"><dc:Bounds x="753" y="208" width="54" height="54"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_G3" bpmnElement="G3"><dc:Bounds x="963" y="208" width="54" height="54"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T04" bpmnElement="T04"><dc:Bounds x="1125" y="437" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T05" bpmnElement="T05"><dc:Bounds x="1335" y="197" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T06" bpmnElement="T06"><dc:Bounds x="1125" y="197" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_E1" bpmnElement="E1"><dc:Bounds x="1600" y="85" width="40" height="40"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_E2" bpmnElement="E2"><dc:Bounds x="1390" y="85" width="40" height="40"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge_F01" bpmnElement="F01"><di:waypoint x="170" y="105"/><di:waypoint x="252" y="105"/><di:waypoint x="252" y="235"/><di:waypoint x="333" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F02" bpmnElement="F02"><di:waypoint x="387" y="235"/><di:waypoint x="495" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F03" bpmnElement="F03"><di:waypoint x="387" y="235"/><di:waypoint x="441" y="235"/><di:waypoint x="441" y="345"/><di:waypoint x="495" y="345"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F04" bpmnElement="F04"><di:waypoint x="645" y="235"/><di:waypoint x="753" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F05" bpmnElement="F05"><di:waypoint x="645" y="345"/><di:waypoint x="699" y="345"/><di:waypoint x="699" y="235"/><di:waypoint x="753" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F06" bpmnElement="F06"><di:waypoint x="807" y="235"/><di:waypoint x="963" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F07" bpmnElement="F07"><di:waypoint x="1017" y="235"/><di:waypoint x="1071" y="235"/><di:waypoint x="1071" y="475"/><di:waypoint x="1125" y="475"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F08" bpmnElement="F08"><di:waypoint x="1017" y="235"/><di:waypoint x="1125" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F09" bpmnElement="F09"><di:waypoint x="1275" y="475"/><di:waypoint x="1305" y="475"/><di:waypoint x="1305" y="235"/><di:waypoint x="1335" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F10" bpmnElement="F10"><di:waypoint x="1485" y="235"/><di:waypoint x="1543" y="235"/><di:waypoint x="1543" y="105"/><di:waypoint x="1600" y="105"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F11" bpmnElement="F11"><di:waypoint x="1275" y="235"/><di:waypoint x="1333" y="235"/><di:waypoint x="1333" y="105"/><di:waypoint x="1390" y="105"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

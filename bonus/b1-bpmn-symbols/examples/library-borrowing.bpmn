@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="defs" targetNamespace="http://campus.example/bpmn-symbols">
+  <process id="library_borrowing" name="Library borrowing" isExecutable="false">
+    <laneSet id="lanes">
+      <lane id="L1" name="Student"><flowNodeRef>S1</flowNodeRef><flowNodeRef>T01</flowNodeRef><flowNodeRef>E1</flowNodeRef><flowNodeRef>E2</flowNodeRef></lane>
+      <lane id="L2" name="Library System"><flowNodeRef>T02</flowNodeRef><flowNodeRef>G1</flowNodeRef><flowNodeRef>T04</flowNodeRef></lane>
+      <lane id="L3" name="Librarian"><flowNodeRef>T03</flowNodeRef><flowNodeRef>T05</flowNodeRef></lane>
+    </laneSet>
+    <startEvent id="S1" name="Book wanted"/>
+    <userTask id="T01" name="Show library card"/>
+    <serviceTask id="T02" name="Check book availability"/>
+    <exclusiveGateway id="G1" name="Book available?"/>
+    <userTask id="T03" name="Hand over the book"/>
+    <serviceTask id="T04" name="Record the loan"/>
+    <userTask id="T05" name="Offer a reservation"/>
+    <endEvent id="E1" name="Book borrowed"/>
+    <endEvent id="E2" name="Reservation made"/>
+    <sequenceFlow id="F01" sourceRef="S1" targetRef="T01"/>
+    <sequenceFlow id="F02" sourceRef="T01" targetRef="T02"/>
+    <sequenceFlow id="F03" sourceRef="T02" targetRef="G1"/>
+    <sequenceFlow id="F04" name="Yes" sourceRef="G1" targetRef="T03"/>
+    <sequenceFlow id="F05" name="No" sourceRef="G1" targetRef="T05"/>
+    <sequenceFlow id="F06" sourceRef="T03" targetRef="T04"/>
+    <sequenceFlow id="F07" sourceRef="T04" targetRef="E1"/>
+    <sequenceFlow id="F08" sourceRef="T05" targetRef="E2"/>
+  </process>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane" bpmnElement="library_borrowing">
+      <bpmndi:BPMNShape id="shape_L1" bpmnElement="L1" isHorizontal="true"><dc:Bounds x="30" y="40" width="1620" height="130"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_L2" bpmnElement="L2" isHorizontal="true"><dc:Bounds x="30" y="170" width="1620" height="130"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_L3" bpmnElement="L3" isHorizontal="true"><dc:Bounds x="30" y="300" width="1620" height="240"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_S1" bpmnElement="S1"><dc:Bounds x="130" y="85" width="40" height="40"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T01" bpmnElement="T01"><dc:Bounds x="285" y="67" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T02" bpmnElement="T02"><dc:Bounds x="495" y="197" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_G1" bpmnElement="G1"><dc:Bounds x="753" y="208" width="54" height="54"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T03" bpmnElement="T03"><dc:Bounds x="915" y="327" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T05" bpmnElement="T05"><dc:Bounds x="915" y="437" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_T04" bpmnElement="T04"><dc:Bounds x="1125" y="197" width="150" height="76"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_E1" bpmnElement="E1"><dc:Bounds x="1390" y="85" width="40" height="40"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_E2" bpmnElement="E2"><dc:Bounds x="1180" y="85" width="40" height="40"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge_F01" bpmnElement="F01"><di:waypoint x="170" y="105"/><di:waypoint x="285" y="105"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F02" bpmnElement="F02"><di:waypoint x="435" y="105"/><di:waypoint x="465" y="105"/><di:waypoint x="465" y="235"/><di:waypoint x="495" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F03" bpmnElement="F03"><di:waypoint x="645" y="235"/><di:waypoint x="753" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F04" bpmnElement="F04"><di:waypoint x="807" y="235"/><di:waypoint x="861" y="235"/><di:waypoint x="861" y="365"/><di:waypoint x="915" y="365"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F05" bpmnElement="F05"><di:waypoint x="807" y="235"/><di:waypoint x="861" y="235"/><di:waypoint x="861" y="475"/><di:waypoint x="915" y="475"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F06" bpmnElement="F06"><di:waypoint x="1065" y="365"/><di:waypoint x="1095" y="365"/><di:waypoint x="1095" y="235"/><di:waypoint x="1125" y="235"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F07" bpmnElement="F07"><di:waypoint x="1275" y="235"/><di:waypoint x="1333" y="235"/><di:waypoint x="1333" y="105"/><di:waypoint x="1390" y="105"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_F08" bpmnElement="F08"><di:waypoint x="1065" y="475"/><di:waypoint x="1123" y="475"/><di:waypoint x="1123" y="105"/><di:waypoint x="1180" y="105"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

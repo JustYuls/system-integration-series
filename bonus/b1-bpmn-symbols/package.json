@@ -1,0 +1,16 @@
+{
+  "name": "campus-event-planner-bonus-1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bonus 1: BPMN symbols, a visual guide, how to draw a process, and examples",
+  "scripts": {
+    "start": "node check-examples.js",
+    "check": "node check-examples.js",
+    "broken": "node check-examples.js --broken",
+    "walk": "node walk-through.js",
+    "diagrams": "node add-diagrams.js",
+    "review": "node review/symbols-review.js",
+    "test": "node --test"
+  }
+}
